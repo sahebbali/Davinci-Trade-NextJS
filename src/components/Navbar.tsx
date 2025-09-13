@@ -47,7 +47,7 @@ const Navbar = () => {
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             <Link
-              href="/login"
+              href="/signin"
               className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors duration-200 mr-2"
             >
               Login
