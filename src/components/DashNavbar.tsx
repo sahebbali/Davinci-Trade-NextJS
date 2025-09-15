@@ -3,20 +3,28 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
+import { FiMenu } from "react-icons/fi"; // Import the hamburger icon
 
-const DashNavbar = () => {
+// Define props for DashNavbar
+interface DashNavbarProps {
+  onMenuClick?: () => void; // Optional function to open the sidebar
+}
+
+const DashNavbar = ({ onMenuClick }: DashNavbarProps) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Mock user data - replace with actual user data from your auth system
   const user = {
     name: "John Doe",
-    role: "User",
-    avatar: "/images/avatar-1.jpg",
+    role: "Admin", // Changed to Admin for demonstration
+    avatar: "/images/avatar-1.jpg", // Make sure this path is correct or use an external URL
   };
 
   const handleLogout = () => {
     console.log("Logging out...");
-    // your logout logic here (Clerk, NextAuth, custom, etc.)
+    // TODO: Implement your actual logout logic here (e.g., Clerk, NextAuth, custom API call)
+    alert("User logged out (simulated)."); // For demonstration
   };
 
   // Close dropdown when clicking outside
@@ -32,35 +40,47 @@ const DashNavbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  console.log({ user });
+
   return (
-    <div className="flex items-center justify-between p-4 bg-gray-50 shadow-sm">
+    <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200 shadow-sm relative z-30">
+      {/* Mobile Menu Button (Hamburger) */}
+      <button className="lg:hidden p-2 text-gray-600" onClick={onMenuClick}>
+        <FiMenu size={24} />
+      </button>
+
       {/* SEARCH BAR */}
-      <div className="hidden md:flex items-center gap-2 text-sm rounded-full ring-[1.5px] ring-gray-300 px-2 py-1 bg-white">
-        <CiSearch size={14} />
+      {/* Hidden on small screens, shown from md breakpoint */}
+      <div className="hidden md:flex flex-grow max-w-md items-center gap-2 text-sm rounded-full ring-1 ring-gray-300 px-3 py-2 bg-gray-50 focus-within:ring-blue-500 transition-all duration-200">
+        <CiSearch size={20} className="text-gray-400" />
         <input
           type="text"
           placeholder="Search..."
-          className="outline-none text-xs bg-transparent"
+          className="outline-none text-sm bg-transparent flex-grow placeholder-gray-400"
         />
       </div>
 
+      {/* Spacer for better alignment when search is hidden on mobile */}
+      <div className="flex-grow md:hidden" />
+
       {/* ICONS AND USER */}
-      <div className="flex items-center gap-6 justify-end w-full">
-        {/* <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center cursor-pointer">
-          <Image src="/message.png" alt="message" width={18} height={18} />
+      <div className="flex items-center gap-4">
+        {/*
+        // Optional: Message and Notification Icons (uncomment if needed)
+        <div className="hidden sm:flex bg-gray-100 rounded-full w-9 h-9 items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+          <Image src="/message.png" alt="message" width={20} height={20} />
         </div>
-        <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center cursor-pointer relative">
+        <div className="hidden sm:flex bg-gray-100 rounded-full w-9 h-9 items-center justify-center cursor-pointer relative hover:bg-gray-200 transition-colors">
           <Image
             src="/announcement.png"
             alt="notifications"
-            width={18}
-            height={18}
+            width={20}
+            height={20}
           />
-          <div className="absolute -top-2 -right-2 w-4 h-4 flex items-center justify-center bg-purple-500 text-white rounded-full text-[10px]">
+          <div className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-red-500 text-white rounded-full text-[10px] font-bold">
             1
           </div>
-        </div> */}
+        </div>
+        */}
 
         {/* Profile Dropdown */}
         <div className="relative" ref={dropdownRef}>
@@ -69,19 +89,21 @@ const DashNavbar = () => {
             alt="avatar"
             width={36}
             height={36}
-            className="rounded-full cursor-pointer border border-gray-200"
+            className="rounded-full cursor-pointer border-2 border-transparent hover:border-blue-500 transition-all duration-200"
             onClick={() => setOpen(!open)}
           />
 
           {open && (
-            <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-100 z-50">
-              <div className="px-3 py-2 border-b">
-                <p className="text-sm font-medium text-gray-700">{user.name}</p>
+            <div className="absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-xl border border-gray-100 z-50 animate-fade-in-down">
+              <div className="px-4 py-3 border-b border-gray-100">
+                <p className="text-sm font-semibold text-gray-800">
+                  {user.name}
+                </p>
                 <p className="text-xs text-gray-500">{user.role}</p>
               </div>
               <button
                 onClick={handleLogout}
-                className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-b-lg"
+                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 rounded-b-lg transition-colors"
               >
                 Logout
               </button>
