@@ -2,26 +2,27 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { role } from "@/components/constants/data";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter(); // Redirect route after successful sign-in
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    // Simulate API call
     try {
-      // Replace with your actual authentication logic (e.g., fetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) }))
       console.log("Signing in with:", { email, password });
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
-      if (email === "test@example.com" && password === "password123") {
-        // Successful login
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (email === "test@example.com" && password === "111111") {
+        router.push(`/${role}`);
         alert("Signed in successfully!");
-        // Redirect user or set auth state
       } else {
         setError("Invalid email or password.");
       }
@@ -75,14 +76,16 @@ export default function SignInPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
+
+            {/* Password field with show/hide */}
+            <div className="relative">
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"} // <-- toggle type
                 autoComplete="current-password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
@@ -90,6 +93,13 @@ export default function SignInPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-600"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </div>
           </div>
 
@@ -133,7 +143,7 @@ export default function SignInPage() {
                   : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               }`}
             >
-              {loading ? (
+              {loading && (
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                   xmlns="http://www.w3.org/2000/svg"
@@ -154,7 +164,7 @@ export default function SignInPage() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-              ) : null}
+              )}
               Sign in
             </button>
           </div>
