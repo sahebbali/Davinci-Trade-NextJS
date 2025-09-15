@@ -1,11 +1,16 @@
-export default function DepositFoundPage() {
+import CompanyWallet from "./CompanyWallet";
+import DepositForm from "./DepositForm";
+
+// interface DepositFundsProps {
+//   accountNumber: string;
+//   qrCodeSrc: string;
+// }
+
+export default function DepositFunds() {
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Deposit Found</h1>
-      <p>
-        Your deposit has been successfully found and processed. You can now
-        access your funds and start trading.
-      </p>
+    <div className="w-full mx-auto mt-8 p-4">
+      <CompanyWallet />
+      <DepositForm />
     </div>
   );
 }
