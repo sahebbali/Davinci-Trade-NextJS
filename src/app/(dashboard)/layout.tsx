@@ -55,7 +55,7 @@ export default function DashboardLayout({
         {" "}
         {/* Added overflow-y-auto here */}
         <DashNavbar onMenuClick={() => setSidebarOpen(true)} />
-        <div className="p-8">{children}</div>
+        <div className="pt-8 mt-8">{children}</div>
       </div>
     </div>
   );
