@@ -35,10 +35,14 @@ export async function createDeposit(data: CreateDepositProps) {
       status: "pending",
     });
 
-    const savedDeposit = await deposit.save();
+    await deposit.save();
 
     // ✅ Convert to plain object before returning
-    return savedDeposit.toObject();
+    return {
+      success: true,
+      message: "Deposit created successfully",
+      //   deposit: savedDeposit.toObject(), // plain object
+    };
   } catch (error: any) {
     console.error("Error creating deposit:", error.message || error);
     throw new Error(error.message || "Failed to create deposit");

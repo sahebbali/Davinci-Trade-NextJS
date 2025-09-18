@@ -4,8 +4,12 @@ import { createDeposit } from "@/lib/actions/deposit.action";
 import { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ToastProvider";
 
 export default function DepositForm() {
+  const { showToast } = useToast();
+  const router = useRouter();
   const [amount, setAmount] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [proofUrl, setProofUrl] = useState<string | null>(null);
@@ -15,8 +19,7 @@ export default function DepositForm() {
     e.preventDefault();
 
     try {
-      console.log("Deposit Click:");
-      const deposit = await createDeposit({
+      const result = await createDeposit({
         amount: Number(amount),
         point: Number(amount), // example conversion
         depositType: "wallet",
@@ -25,12 +28,18 @@ export default function DepositForm() {
           ? { imageUrl: proofUrl, publicUrl: publicId ?? "" }
           : undefined,
       });
-
-      alert("Deposit submitted!");
-      console.log("Deposit saved:", deposit);
-    } catch (err) {
+      console.log({ result });
+      if (result.success) {
+        console.log("Deposit submitted!");
+        showToast("Deposite Success", "success");
+        router.push("/user/deposit-history");
+        // console.log("Deposit saved:", result.deposit);
+      } else {
+        showToast(result.message, "error");
+      }
+    } catch (err: any) {
       console.error(err);
-      // alert("Failed to submit deposit.");
+      showToast(err.message || "Failed to submit deposit.", "error");
     }
   };
 

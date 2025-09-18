@@ -11,8 +11,8 @@ export async function getCurrentUser() {
 
   return {
     id: session.user.id,
-    userId: session.user.userId,
-    fullName: session.user.name || "",
+    userId: session.user.userId || "",
+    fullName: session.user.fullName || "",
     email: session.user.email || "",
     role: session.user.role || "",
   };
