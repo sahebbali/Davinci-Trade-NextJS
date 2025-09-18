@@ -4,7 +4,16 @@ import HeroSection from "@/components/landing/HeroSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import Layout from "@/components/landing/Layout";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
-
+import { Metadata } from "next";
+const PAGE_TITLE = "Davinci Trade";
+export const metadata: Metadata = {
+  title: PAGE_TITLE,
+  icons: {
+    icon: "/logo.jpg", // path to your favicon
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+};
 export default function Home() {
   return (
     <Layout>

@@ -1,13 +1,21 @@
 "use client";
-import {
-  registerUser,
-  signInWithCredentials,
-} from "@/lib/actions/user.actions";
+import { registerUser } from "@/lib/actions/user.actions";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Select from "react-select"; // Using react-select for better country dropdown
+
+// import { Metadata } from "next";
+// const PAGE_TITLE = "SignUP";
+// export const metadata: Metadata = {
+//   title: PAGE_TITLE,
+//   icons: {
+//     icon: "/logo.jpg", // path to your favicon
+//     shortcut: "/favicon.ico",
+//     apple: "/apple-touch-icon.png",
+//   },
+// };
 
 // Mock country data - in a real app, you'd fetch this or use a library
 const countryOptions = [

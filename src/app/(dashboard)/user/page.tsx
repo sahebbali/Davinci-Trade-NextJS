@@ -1,4 +1,9 @@
-export default function UserPage() {
+import { authOptions } from "@/auth";
+import { getServerSession } from "next-auth";
+
+export default async function UserPage() {
+  const session = await getServerSession(authOptions);
+  console.log({ session });
   const user = {
     name: "John Doe",
     userId: "MLM12345",
@@ -21,7 +26,7 @@ export default function UserPage() {
       <div className="bg-white shadow-md rounded-xl p-6 flex justify-between items-center">
         <div>
           <p className="text-gray-500">User ID</p>
-          <p className="font-semibold">{user.userId}</p>
+          <p className="font-semibold">{session?.user?.userId}</p>
         </div>
         <div>
           <p className="text-gray-500">Rank</p>

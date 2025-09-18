@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { FiMenu } from "react-icons/fi"; // Hamburger menu
+import { signOut } from "next-auth/react";
 
 interface DashNavbarProps {
   onMenuClick?: () => void; // Function to toggle sidebar
@@ -19,9 +20,16 @@ const DashNavbar = ({ onMenuClick }: DashNavbarProps) => {
     avatar: "/images/avatar-1.jpg", // Replace with real avatar
   };
 
-  const handleLogout = () => {
-    console.log("Logging out...");
-    alert("User logged out (simulated).");
+  const handleLogout = async () => {
+    try {
+      await signOut({
+        redirect: true, // redirect after logout
+        callbackUrl: "/signin", // where to go after logout
+      });
+    } catch (err) {
+      console.error("Logout error:", err);
+      alert("Failed to log out. Please try again.");
+    }
   };
 
   // Close dropdown on outside click

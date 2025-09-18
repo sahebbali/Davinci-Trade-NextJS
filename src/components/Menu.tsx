@@ -17,6 +17,7 @@ import {
   FiUpload,
   FiX,
 } from "react-icons/fi";
+import { useSession } from "next-auth/react";
 
 const menuItems = [
   {
@@ -93,7 +94,8 @@ interface MenuProps {
 }
 
 const Menu = ({ sidebarOpen, setSidebarOpen }: MenuProps) => {
-  const role = "user";
+  const { data: session } = useSession();
+  const role = session?.user?.role || "user";
   const pathname = usePathname();
   const [activeSection, setActiveSection] = useState<string | null>(null);
 

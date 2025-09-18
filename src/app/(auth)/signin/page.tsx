@@ -8,6 +8,7 @@ import { useNotification } from "@/components/Notification"; // Assuming this is
 
 import { FaEye, FaEyeSlash, FaEnvelope } from "react-icons/fa";
 import { IoLockClosed } from "react-icons/io5";
+import Image from "next/image";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -73,12 +74,15 @@ export default function SignInPage() {
       <div className="max-w-md w-full bg-white p-10 rounded-xl shadow-lg space-y-8 border border-gray-200">
         <div>
           {/* Your Logo/Brand Name */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-2">
             {/* Replace with your actual logo component or image */}
-            <img
-              src="/davinci-logo.svg"
+            <Image
+              src="/logo.jpg"
               alt="DaVinci-Trade Logo"
-              className="h-10 w-auto"
+              // className="h-15 w-auto"
+              width={75}
+              height={75}
+              // fill
             />
           </div>
           <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">
