@@ -3,7 +3,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { role } from "@/components/constants/data";
+import { getSession, signIn } from "next-auth/react";
+import { useNotification } from "@/components/Notification"; // Assuming this is correct
+
+import { FaEye, FaEyeSlash, FaEnvelope } from "react-icons/fa";
+import { IoLockClosed } from "react-icons/io5";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -11,30 +15,53 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter(); // Redirect route after successful sign-in
+  const router = useRouter();
+  const { showNotification } = useNotification();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
     try {
-      console.log("Signing in with:", { email, password });
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      if (email === "test@example.com" && password === "111111") {
-        router.push(`/${role}`);
-        alert("Signed in successfully!");
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        showNotification(result.error, "error");
+        setError(result.error); // Also set local error state for display
       } else {
-        setError("Invalid email or password.");
+        showNotification("Login successful!", "success");
+
+        const session = await getSession();
+        console.log("Session after login:", session);
+
+        if (session?.user?.role === "admin") {
+          router.push("/admin");
+        } else if (session?.user?.role === "user") {
+          // Corrected syntax here
+          router.push("/user");
+        } else {
+          router.push("/"); // Default redirect if role is not found or handled
+        }
       }
     } catch (err) {
+      console.error("Sign-in error:", err); // Log the actual error for debugging
       setError("An unexpected error occurred. Please try again.");
+      showNotification(
+        "An unexpected error occurred. Please try again.",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <Head>
         <title>Sign In | DaVinci-Trade</title>
         <meta
@@ -43,64 +70,86 @@ export default function SignInPage() {
         />
       </Head>
 
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-xl">
+      <div className="max-w-md w-full bg-white p-10 rounded-xl shadow-lg space-y-8 border border-gray-200">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          {/* Your Logo/Brand Name */}
+          <div className="flex justify-center mb-6">
+            {/* Replace with your actual logo component or image */}
+            <img
+              src="/davinci-logo.svg"
+              alt="DaVinci-Trade Logo"
+              className="h-10 w-auto"
+            />
+          </div>
+          <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{" "}
+            Welcome back! Please enter your details.
+          </p>
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Don't have an account?{" "}
             <Link
               href="/signup"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              create a new account
+              Create a new account
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
 
-            {/* Password field with show/hide */}
-            <div className="relative">
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"} // <-- toggle type
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-600"
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {/* Email field with icon */}
+          <div className="relative">
+            <label htmlFor="email-address" className="sr-only">
+              Email address
+            </label>
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaEnvelope className="h-5 w-5 text-gray-400" />
             </div>
+            <input
+              id="email-address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          {/* Password field with show/hide icon */}
+          <div className="relative">
+            <label htmlFor="password" className="sr-only">
+              Password
+            </label>
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <IoLockClosed className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              required
+              className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+            >
+              {showPassword ? (
+                <FaEyeSlash className="h-5 w-5" />
+              ) : (
+                <FaEye className="h-5 w-5" />
+              )}
+            </button>
           </div>
 
           <div className="flex items-center justify-between">
@@ -130,7 +179,9 @@ export default function SignInPage() {
           </div>
 
           {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+            <div className="text-red-600 text-sm text-center font-medium mt-4">
+              {error}
+            </div>
           )}
 
           <div>
@@ -141,7 +192,7 @@ export default function SignInPage() {
                 loading
                   ? "bg-blue-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              }`}
+              } transition duration-150 ease-in-out`}
             >
               {loading && (
                 <svg

@@ -1,6 +1,11 @@
 "use client";
+import {
+  registerUser,
+  signInWithCredentials,
+} from "@/lib/actions/user.actions";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Select from "react-select"; // Using react-select for better country dropdown
 
@@ -15,6 +20,7 @@ const countryOptions = [
   { value: "FR", label: "France (+33)" },
   { value: "JP", label: "Japan (+81)" },
   { value: "BR", label: "Brazil (+55)" },
+  { value: "BN", label: "Bangladesh (+88)" },
   // Add more countries as needed
 ];
 
@@ -30,6 +36,8 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -41,23 +49,31 @@ export default function SignUpPage() {
       return;
     }
 
-    // Simulate API call
     try {
-      console.log("Signing up with:", {
+      const result = await registerUser({
         firstName,
         lastName,
         email,
         password,
-        countryCode: selectedCountry?.value,
+        confirmPassword,
+        countryCode: selectedCountry?.value || "",
         phoneNumber: `${
           selectedCountry?.label.split("(")[1].split(")")[0]
-        }${phoneNumber}`, // Example of combining country code
+        }${phoneNumber}`,
         sponsorId,
       });
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
-      alert("Account created successfully! Please sign in.");
-      // Optionally redirect to login page
-      // router.push('/signin');
+
+      if (result.success) {
+        // await signInWithCredentials({
+        //   email,
+        //   password,
+        // });
+        alert("✅ Account created successfully! Please sign in.");
+        // Optionally redirect to login
+        router.push("/signin");
+      } else {
+        setError(result.error || "Failed to register user.");
+      }
     } catch (err) {
       setError(
         "An unexpected error occurred during registration. Please try again."

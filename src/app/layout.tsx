@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import { NotificationProvider } from "@/components/Notification";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <Header /> */}
-        {/* <Navbar /> */}
-        <main className="flex-grow">{children}</main>
-        {/* <Footer /> */}
+        <NotificationProvider>
+          {/* <Header /> */}
+          {/* <Navbar /> */}
+          <main className="flex-grow">{children}</main>
+          {/* <Footer /> */}
+        </NotificationProvider>
       </body>
     </html>
   );

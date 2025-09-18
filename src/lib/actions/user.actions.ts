@@ -1,7 +1,7 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { IUserName, IUserSignIn, IUserSignUp } from "@/types";
+import { IUserSignIn, IUserSignUp } from "@/types";
 import { UserSignUpSchema, UserUpdateSchema } from "../validator";
 import { connectToDatabase } from "../db";
 
@@ -9,26 +9,34 @@ import { formatError } from "../utils";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { auth, signIn, signOut } from "@/auth";
+// import { auth, signIn, signOut } from "@/auth";
 import User, { IUser } from "../db/models/user.model";
+import { generateUniqueUserID } from "../helper";
+import { signIn } from "next-auth/react";
 
 // import { getSetting } from './setting.actions'
 
 // CREATE
 export async function registerUser(userSignUp: IUserSignUp) {
   try {
-    const user = await UserSignUpSchema.parseAsync({
-      name: userSignUp.name,
-      email: userSignUp.email,
-      password: userSignUp.password,
-      confirmPassword: userSignUp.confirmPassword,
+    // ✅ Validate
+    const user = await UserSignUpSchema.parseAsync(userSignUp);
+
+    // ✅ Connect DB
+    await connectToDatabase();
+
+    // ✅ Create User
+    await User.create({
+      userId: generateUniqueUserID(), // or your own generator
+      fullName: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+      password: user.password,
+      mobile: user.phoneNumber,
+      sponsorId: user.sponsorId,
+      sponsorName: "N/A", // you can fetch sponsor details if needed
+      country: user.countryCode,
     });
 
-    await connectToDatabase();
-    await User.create({
-      ...user,
-      password: await bcrypt.hash(user.password, 5),
-    });
     return { success: true, message: "User created successfully" };
   } catch (error) {
     return { success: false, error: formatError(error) };
@@ -72,34 +80,42 @@ export async function updateUser(user: z.infer<typeof UserUpdateSchema>) {
     return { success: false, message: formatError(error) };
   }
 }
-export async function updateUserName(user: IUserName) {
-  try {
-    await connectToDatabase();
-    const session = await auth();
-    const currentUser = await User.findById(session?.user?.id);
-    if (!currentUser) throw new Error("User not found");
-    currentUser.fullName = user.name;
-    const updatedUser = await currentUser.save();
-    return {
-      success: true,
-      message: "User updated successfully",
-      data: JSON.parse(JSON.stringify(updatedUser)),
-    };
-  } catch (error) {
-    return { success: false, message: formatError(error) };
-  }
-}
+// export async function updateUserName(user: IUserName) {
+//   try {
+//     await connectToDatabase();
+//     const session = await auth();
+//     const currentUser = await User.findById(session?.user?.id);
+//     if (!currentUser) throw new Error("User not found");
+//     currentUser.fullName = user.name;
+//     const updatedUser = await currentUser.save();
+//     return {
+//       success: true,
+//       message: "User updated successfully",
+//       data: JSON.parse(JSON.stringify(updatedUser)),
+//     };
+//   } catch (error) {
+//     return { success: false, message: formatError(error) };
+//   }
+// }
 
 export async function signInWithCredentials(user: IUserSignIn) {
-  return await signIn("credentials", { ...user, redirect: false });
+  try {
+    const result = await signIn("credentials", { ...user, redirect: false });
+    console.log("Sign-in result:", result);
+    return result;
+  } catch (error) {
+    console.error("Error during signInWithCredentials:", error);
+    // Re-throw or return a structured error if needed for the UI
+    throw error; // Or return { success: false, error: formatError(error) };
+  }
 }
-export const SignInWithGoogle = async () => {
-  await signIn("google");
-};
-export const SignOut = async () => {
-  const redirectTo = await signOut({ redirect: false });
-  redirect(redirectTo.redirect);
-};
+// export const SignInWithGoogle = async () => {
+//   await signIn("google");
+// };
+// export const SignOut = async () => {
+//   const redirectTo = await signOut({ redirect: false });
+//   redirect(redirectTo.redirect);
+// };
 
 // GET
 // export async function getAllUsers({
