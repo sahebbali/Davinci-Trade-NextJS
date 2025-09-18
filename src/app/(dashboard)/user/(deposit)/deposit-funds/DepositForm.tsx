@@ -1,16 +1,37 @@
 "use client";
 
+import { createDeposit } from "@/lib/actions/deposit.action";
 import { useState } from "react";
+import { CldUploadWidget } from "next-cloudinary";
+import Image from "next/image";
 
 export default function DepositForm() {
   const [amount, setAmount] = useState("");
   const [transactionId, setTransactionId] = useState("");
-  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [proofUrl, setProofUrl] = useState<string | null>(null);
+  const [publicId, setPublicId] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ amount, transactionId, proofFile });
-    alert("Deposit submitted!");
+
+    try {
+      console.log("Deposit Click:");
+      const deposit = await createDeposit({
+        amount: Number(amount),
+        point: Number(amount), // example conversion
+        depositType: "wallet",
+        transactionId,
+        proofPic: proofUrl
+          ? { imageUrl: proofUrl, publicUrl: publicId ?? "" }
+          : undefined,
+      });
+
+      alert("Deposit submitted!");
+      console.log("Deposit saved:", deposit);
+    } catch (err) {
+      console.error(err);
+      // alert("Failed to submit deposit.");
+    }
   };
 
   return (
@@ -19,7 +40,6 @@ export default function DepositForm() {
         Deposit Funds
       </h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        {/* Flex row for inputs */}
         <div className="flex flex-col md:flex-row gap-4">
           {/* Amount */}
           <div className="flex-1">
@@ -37,17 +57,42 @@ export default function DepositForm() {
           </div>
 
           {/* Proof Image */}
-          <div className="flex-1">
+          <div className="flex-1 flex-row">
             <label className="block text-gray-700 font-medium mb-2">
-              Proof Image
+              Proof
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setProofFile(e.target.files?.[0] || null)}
-              className="w-full text-gray-700"
-              required
-            />
+            <CldUploadWidget
+              uploadPreset="school1" // from your Cloudinary settings
+              onSuccess={(result: any, { widget }) => {
+                setProofUrl(result.info.secure_url);
+                setPublicId(result.info.public_id);
+                widget.close();
+              }}
+            >
+              {({ open }) => {
+                return (
+                  <div
+                    className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+                    onClick={() => open()}
+                  >
+                    <Image src="/upload.png" alt="" width={28} height={28} />
+                    <span>
+                      {proofUrl ? "File uploaded ✅" : "Upload a photo"}
+                    </span>
+                  </div>
+                );
+              }}
+            </CldUploadWidget>
+
+            {proofUrl && (
+              <Image
+                src={proofUrl}
+                alt="Proof Preview"
+                width={100}
+                height={100}
+                className="mt-2 rounded-lg border"
+              />
+            )}
           </div>
 
           {/* Transaction ID */}
@@ -66,11 +111,11 @@ export default function DepositForm() {
           </div>
         </div>
 
-        {/* Submit button */}
+        {/* Submit */}
         <div className="flex justify-center mt-4">
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-6 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 text-white py-2 px-6 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer"
           >
             Submit
           </button>

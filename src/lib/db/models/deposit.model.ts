@@ -27,7 +27,7 @@ const depositSchema = new Schema<IDeposit>(
     userId: { type: String, required: [true, "User ID is required"] },
     fullName: { type: String, required: [true, "Full Name is required"] },
     amount: { type: Number, required: [true, "Amount is required"] },
-    point: { type: Number, required: [true, "Point is required"] },
+    // point: { type: Number, required: [true, "Point is required"] },
     status: {
       type: String,
       enum: ["pending", "succeed", "rejected"],
@@ -49,5 +49,6 @@ const depositSchema = new Schema<IDeposit>(
 );
 
 const Deposit: Model<IDeposit> =
-  mongoose.models.Deposit || model<IDeposit>("Deposit", depositSchema);
+  mongoose?.models?.Deposit ||
+  mongoose.model<IDeposit>("Deposit", depositSchema);
 export default Deposit;

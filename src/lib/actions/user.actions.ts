@@ -1,12 +1,11 @@
 "use server";
 
-import bcrypt from "bcryptjs";
 import { IUserSignIn, IUserSignUp } from "@/types";
 import { UserSignUpSchema, UserUpdateSchema } from "../validator";
 import { connectToDatabase } from "../db";
 
 import { formatError } from "../utils";
-import { redirect } from "next/navigation";
+
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 // import { auth, signIn, signOut } from "@/auth";

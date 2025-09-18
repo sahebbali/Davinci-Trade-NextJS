@@ -81,6 +81,6 @@ userSchema.pre("save", async function (next) {
 
 // Avoid OverwriteModelError in Next.js
 const User: Model<IUser> =
-  mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+  mongoose?.models?.User || mongoose.model<IUser>("User", userSchema);
 
 export default User;
