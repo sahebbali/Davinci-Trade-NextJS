@@ -4,20 +4,20 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSession, signIn } from "next-auth/react";
-import { useNotification } from "@/components/Notification"; // Assuming this is correct
 
 import { FaEye, FaEyeSlash, FaEnvelope } from "react-icons/fa";
 import { IoLockClosed } from "react-icons/io5";
 import Image from "next/image";
+import { useToast } from "@/components/ToastProvider";
 
 export default function SignInPage() {
+  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { showNotification } = useNotification();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,10 +32,10 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        showNotification(result.error, "error");
+        showToast(result.error, "error");
         setError(result.error); // Also set local error state for display
       } else {
-        showNotification("Login successful!", "success");
+        showToast("Login successful!", "success");
 
         const session = await getSession();
         console.log("Session after login:", session);
@@ -52,10 +52,7 @@ export default function SignInPage() {
     } catch (err) {
       console.error("Sign-in error:", err); // Log the actual error for debugging
       setError("An unexpected error occurred. Please try again.");
-      showNotification(
-        "An unexpected error occurred. Please try again.",
-        "error"
-      );
+      showToast("An unexpected error occurred. Please try again.", "error");
     } finally {
       setLoading(false);
     }

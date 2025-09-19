@@ -1,4 +1,5 @@
 "use client";
+import { useToast } from "@/components/ToastProvider";
 import { registerUser } from "@/lib/actions/user.actions";
 import Head from "next/head";
 import Link from "next/link";
@@ -33,6 +34,7 @@ const countryOptions = [
 ];
 
 export default function SignUpPage() {
+  const { showToast } = useToast();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -78,6 +80,7 @@ export default function SignUpPage() {
         // });
         alert("✅ Account created successfully! Please sign in.");
         // Optionally redirect to login
+        showToast("Register successfull", "success");
         router.push("/signin");
       } else {
         setError(result.error || "Failed to register user.");
@@ -85,6 +88,10 @@ export default function SignUpPage() {
     } catch (err) {
       setError(
         "An unexpected error occurred during registration. Please try again."
+      );
+      showToast(
+        "An unexpected error occurred during registration. Please try again.",
+        "error"
       );
     } finally {
       setLoading(false);
