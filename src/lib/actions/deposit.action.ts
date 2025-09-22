@@ -16,11 +16,13 @@ interface CreateDepositProps {
 
 export async function createDeposit(data: CreateDepositProps) {
   try {
+    await connectToDatabase();
     // Get authenticated user
     const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User not authenticated");
 
-    await connectToDatabase();
+    if (data.point < 1) throw new Error("Point must be greater than 0");
+    if (data.amount < 10) throw new Error("Amount must be greater than 10");
 
     const deposit = new Deposit({
       userId: currentUser.userId,

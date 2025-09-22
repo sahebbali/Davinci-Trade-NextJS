@@ -12,6 +12,7 @@ import { z } from "zod";
 import User, { IUser } from "../db/models/user.model";
 import { generateUniqueUserID } from "../helper";
 import { signIn } from "next-auth/react";
+import Wallet from "../db/models/wallet.model";
 
 // import { getSetting } from './setting.actions'
 
@@ -25,7 +26,7 @@ export async function registerUser(userSignUp: IUserSignUp) {
     await connectToDatabase();
 
     // ✅ Create User
-    await User.create({
+    const userData = await User.create({
       userId: generateUniqueUserID(), // or your own generator
       fullName: `${user.firstName} ${user.lastName}`,
       email: user.email,
@@ -35,7 +36,12 @@ export async function registerUser(userSignUp: IUserSignUp) {
       sponsorName: "N/A", // you can fetch sponsor details if needed
       country: user.countryCode,
     });
-
+    await Wallet.create({
+      userId: userData.userId,
+      fullName: userData.fullName,
+      sponsorId: userData.sponsorId,
+      sponsorName: userData.sponsorName,
+    });
     return { success: true, message: "User created successfully" };
   } catch (error) {
     return { success: false, error: formatError(error) };
