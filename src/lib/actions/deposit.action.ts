@@ -49,6 +49,26 @@ export async function createDeposit(data: CreateDepositProps) {
   }
 }
 
+export async function getUserDepositHistory() {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "User not authenticated" };
+    }
+
+    await connectToDatabase();
+
+    const deposits = await Deposit.find({ userId: user.userId })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return { success: true, data: deposits };
+  } catch (error) {
+    console.error("❌ Error fetching deposit history:", error);
+    return { success: false, error: "Failed to fetch deposit history" };
+  }
+}
+
 export async function updateDepositStatus(
   depositId: string,
   status: "pending" | "succeed" | "rejected"

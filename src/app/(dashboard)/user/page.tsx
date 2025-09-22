@@ -1,7 +1,11 @@
 import { authOptions } from "@/auth";
 import { getServerSession } from "next-auth";
 
+import { getCurrentUser } from "@/lib/getCurrentUser";
+
 export default async function UserPage() {
+  const currentUser = await getCurrentUser();
+  console.log("client c", { currentUser });
   const session = await getServerSession(authOptions);
   console.log({ session });
   const user = {
@@ -26,7 +30,7 @@ export default async function UserPage() {
       <div className="bg-white shadow-md rounded-xl p-6 flex justify-between items-center">
         <div>
           <p className="text-gray-500">User ID</p>
-          <p className="font-semibold">{session?.user?.userId}</p>
+          <p className="font-semibold">{currentUser?.userId}</p>
         </div>
         <div>
           <p className="text-gray-500">Rank</p>
