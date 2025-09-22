@@ -13,6 +13,10 @@ export async function getCurrentUser() {
   if (!session?.user) return null; // Not logged in
 
   const currentUser = await User.findOne({ userId: session.user.userId });
+  if (!currentUser) {
+    session.destroy();
+    return;
+  } // User not found
   // console.log({ currentUser });
 
   return {

@@ -4,6 +4,7 @@ import { Model } from "mongoose";
 export interface IDeposit extends Document {
   userId: string;
   fullName: string;
+  email: string;
   amount: number;
   point: number;
   status: "pending" | "succeed" | "rejected";
@@ -27,6 +28,7 @@ const depositSchema = new Schema<IDeposit>(
     userId: { type: String, required: [true, "User ID is required"] },
     fullName: { type: String, required: [true, "Full Name is required"] },
     amount: { type: Number, required: [true, "Amount is required"] },
+    email: { type: String, required: [true, "Amount is required"] },
     // point: { type: Number, required: [true, "Point is required"] },
     status: {
       type: String,

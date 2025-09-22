@@ -17,14 +17,15 @@ interface CreateDepositProps {
 export async function createDeposit(data: CreateDepositProps) {
   try {
     // Get authenticated user
-    const user = await getCurrentUser();
-    if (!user) throw new Error("User not authenticated");
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
 
     await connectToDatabase();
 
     const deposit = new Deposit({
-      userId: user.userId,
-      fullName: user.fullName || "Saheb", // make sure you use fullName from session
+      userId: currentUser.userId,
+      fullName: currentUser.fullName || "", // make sure you use fullName from session
+      email: currentUser.email || "", // make sure you use fullName from session
       amount: data.amount,
       point: data.point,
       depositType: data.depositType,
@@ -49,7 +50,7 @@ export async function createDeposit(data: CreateDepositProps) {
   }
 }
 
-export async function getUserDepositHistory() {
+export async function getUserDepositHistory(page = 1, limit = 10) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -58,17 +59,31 @@ export async function getUserDepositHistory() {
 
     await connectToDatabase();
 
-    const deposits = await Deposit.find({ userId: user.userId })
-      .sort({ createdAt: -1 })
-      .lean();
+    // Pagination logic
+    const skip = (page - 1) * limit;
 
-    return { success: true, data: deposits };
+    const [deposits, total] = await Promise.all([
+      Deposit.find({ userId: user.userId })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Deposit.countDocuments({ userId: user.userId }),
+    ]);
+
+    return {
+      success: true,
+      data: deposits,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   } catch (error) {
     console.error("❌ Error fetching deposit history:", error);
     return { success: false, error: "Failed to fetch deposit history" };
   }
 }
-
 export async function updateDepositStatus(
   depositId: string,
   status: "pending" | "succeed" | "rejected"

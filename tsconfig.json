@@ -27,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/lib/getCurrentUser.js"
+    "src/lib/getCurrentUser.js",
+    "src/app/(dashboard)/user/(deposit)/deposit-history/page.jsx",
+    "src/components/Table.jsx"
   ],
   "exclude": ["node_modules"]
 }
