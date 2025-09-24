@@ -13,8 +13,7 @@ import User, { IUser } from "../db/models/user.model";
 import { generateUniqueUserID } from "../helper";
 import { signIn } from "next-auth/react";
 import Wallet from "../db/models/wallet.model";
-
-// import { getSetting } from './setting.actions'
+import { getCurrentUser } from "../getCurrentUser";
 
 // CREATE
 export async function registerUser(userSignUp: IUserSignUp) {
@@ -102,6 +101,41 @@ export async function updateUser(user: z.infer<typeof UserUpdateSchema>) {
 //     return { success: false, message: formatError(error) };
 //   }
 // }
+
+// server action
+export async function updateProfile(data: {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  avatar: string;
+}) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
+
+    const { fullName, email, phone, address } = data;
+    console.log({ fullName, email, phone, address });
+    // Validation
+    if (!fullName.trim()) throw new Error("Full name is required");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      throw new Error("Invalid email");
+    if (!/^[\d +()-]{7,}$/.test(phone)) throw new Error("Invalid phone number");
+    if (!address.trim()) throw new Error("Address is required");
+
+    // DB update
+    await User.findOneAndUpdate(
+      { userId: currentUser.userId },
+      { fullName, email, mobile: phone, address, avatar: data.avatar },
+      { new: true }
+    );
+
+    revalidatePath("/user/edit-profile");
+    return { success: true, message: "Profile updated ✅" };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Update failed ❌" };
+  }
+}
 
 export async function signInWithCredentials(user: IUserSignIn) {
   try {

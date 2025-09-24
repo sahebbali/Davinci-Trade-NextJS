@@ -21,13 +21,14 @@ export const authOptions: NextAuthOptions = {
           await connectToDatabase();
 
           const user = await User.findOne({ email: credentials.email });
-          console.log("auth", user);
+          // console.log("auth", user);
           if (!user) throw new Error("No user found with this email");
 
           const isValid = await bcrypt.compare(
             credentials.password,
             user.password
           );
+          // console.log("isValid", isValid);
           if (!isValid) throw new Error("Invalid password");
 
           // ✅ Return only safe fields (no password!)

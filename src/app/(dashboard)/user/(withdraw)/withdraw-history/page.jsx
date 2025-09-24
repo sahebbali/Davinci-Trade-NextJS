@@ -5,7 +5,7 @@ import TableSearch from "@/components/TableSearch";
 import { getUserDepositHistory } from "@/lib/actions/deposit.action";
 import ProofImageModal from "@/components/ProofImageModal";
 
-const DepositHistoryPage = async ({ searchParams }) => {
+const WithdrawHistoryPage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = 10;
   console.log({ page, limit });
@@ -84,4 +84,4 @@ const DepositHistoryPage = async ({ searchParams }) => {
   );
 };
 
-export default DepositHistoryPage;
+export default WithdrawHistoryPage;

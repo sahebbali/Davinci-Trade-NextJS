@@ -42,7 +42,6 @@ const withdrawSchema = new Schema<IWithdraw>(
     fullName: { type: String },
     sponsorId: { type: String },
     sponsorName: { type: String },
-    requestPoint: { type: Number },
     requestAmount: { type: Number },
     withdrawCharge: { type: Number },
     pointAfterCharge: { type: Number },

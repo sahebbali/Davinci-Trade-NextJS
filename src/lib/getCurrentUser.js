@@ -24,6 +24,8 @@ export async function getCurrentUser() {
     userId: currentUser.userId || "",
     fullName: currentUser.fullName || "",
     email: currentUser.email || "",
+    phone: currentUser.phone || "",
+    address: currentUser.address || "",
     role: currentUser.role || "",
   };
 }

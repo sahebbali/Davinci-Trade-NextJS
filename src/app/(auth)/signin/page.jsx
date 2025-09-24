@@ -1,9 +1,9 @@
 "use client";
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getSession, signIn } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 
 import { FaEye, FaEyeSlash, FaEnvelope } from "react-icons/fa";
 import { IoLockClosed } from "react-icons/io5";
@@ -18,8 +18,17 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
+  console.log("page-signin", { session });
+  useEffect(() => {
+    if (!session?.user?.role) return;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const targetPath = session.user.role === "admin" ? "/admin" : "/user";
+    if (router.pathname !== targetPath) {
+      router.push(targetPath);
+    }
+  }, [session?.user?.role, router]);
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");

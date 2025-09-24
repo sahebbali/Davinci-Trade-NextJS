@@ -21,6 +21,7 @@ export interface IUser extends Document {
   totalDownline?: number;
   team: { userId: string; level: string }[];
   country?: string;
+  address?: string;
   gender?: string;
   avatar?: string;
   deleteStatus: boolean;
@@ -57,6 +58,7 @@ const userSchema: Schema<IUser> = new Schema(
     totalDownline: { type: Number },
     team: [{ userId: String, level: String }],
     country: { type: String },
+    address: { type: String },
     gender: { type: String },
     avatar: { type: String },
     deleteStatus: { type: Boolean, default: false },
