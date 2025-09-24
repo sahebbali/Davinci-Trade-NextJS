@@ -56,6 +56,12 @@ const menuItems = [
     items: [
       {
         icon: <FiArrowDownCircle size={16} />,
+        label: "My Wallet",
+        href: "/user/my-wallet",
+        visible: ["user"],
+      },
+      {
+        icon: <FiArrowDownCircle size={16} />,
         label: "Deposit Funds",
         href: "/user/deposit-funds",
         visible: ["user"],
