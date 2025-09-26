@@ -3,7 +3,6 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { getUserDepositHistory } from "@/lib/actions/deposit.action";
-import ProofImageModal from "@/components/ProofImageModal";
 
 const ProfitSharingPage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;

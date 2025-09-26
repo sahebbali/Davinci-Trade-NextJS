@@ -21,6 +21,9 @@ import { FaBriefcase } from "react-icons/fa";
 import { MdFlipCameraAndroid } from "react-icons/md";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { GiProfit } from "react-icons/gi";
+import { FaPersonBooth } from "react-icons/fa";
+import { FaPersonDotsFromLine } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa";
 
 import { useSession } from "next-auth/react";
 
@@ -51,6 +54,24 @@ const menuItems = [
         icon: <FiCreditCard size={16} />,
         label: "Add Wallet",
         href: "/user/add-wallet",
+        visible: ["user"],
+      },
+    ],
+  },
+  {
+    title: "Level",
+    icon: <FaPersonBooth size={18} />,
+    items: [
+      {
+        icon: <FaPersonDotsFromLine size={16} />,
+        label: "Level One",
+        href: "/user/level-one",
+        visible: ["user"],
+      },
+      {
+        icon: <FaUsers size={16} />,
+        label: "Level",
+        href: "/user/level",
         visible: ["user"],
       },
     ],
