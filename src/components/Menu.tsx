@@ -17,6 +17,11 @@ import {
   FiUpload,
   FiX,
 } from "react-icons/fi";
+import { FaBriefcase } from "react-icons/fa";
+import { MdFlipCameraAndroid } from "react-icons/md";
+import { SiLevelsdotfyi } from "react-icons/si";
+import { GiProfit } from "react-icons/gi";
+
 import { useSession } from "next-auth/react";
 
 const menuItems = [
@@ -88,6 +93,30 @@ const menuItems = [
         icon: <FiClock size={16} />,
         label: "Withdraw History",
         href: "/user/withdraw-history",
+        visible: ["user"],
+      },
+    ],
+  },
+  {
+    title: "Earning",
+    icon: <FaBriefcase size={18} />,
+    items: [
+      {
+        icon: <MdFlipCameraAndroid size={16} />,
+        label: "ROI Income",
+        href: "/user/roi-income",
+        visible: ["user"],
+      },
+      {
+        icon: <SiLevelsdotfyi size={16} />,
+        label: "Level Income",
+        href: "/user/level-income",
+        visible: ["user"],
+      },
+      {
+        icon: <GiProfit size={16} />,
+        label: "Profit Sharing",
+        href: "/user/profit-sharing",
         visible: ["user"],
       },
     ],
