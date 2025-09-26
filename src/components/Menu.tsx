@@ -59,19 +59,37 @@ const menuItems = [
     ],
   },
   {
-    title: "Level",
+    title: "My Partner",
     icon: <FaPersonBooth size={18} />,
     items: [
       {
         icon: <FaPersonDotsFromLine size={16} />,
-        label: "Level One",
+        label: "Referral Partners",
         href: "/user/level-one",
         visible: ["user"],
       },
       {
         icon: <FaUsers size={16} />,
-        label: "Level",
+        label: "Level Partners",
         href: "/user/level",
+        visible: ["user"],
+      },
+    ],
+  },
+  {
+    title: "TOP Up",
+    icon: <FaPersonBooth size={18} />,
+    items: [
+      {
+        icon: <FaPersonDotsFromLine size={16} />,
+        label: "TOP Up Amount",
+        href: "/user/top-up",
+        visible: ["user"],
+      },
+      {
+        icon: <FaUsers size={16} />,
+        label: "TOP Up History",
+        href: "/user/top-up-history",
         visible: ["user"],
       },
     ],

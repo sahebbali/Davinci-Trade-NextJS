@@ -229,12 +229,12 @@ const LevelPage = () => {
       <td className="px-6 py-4 whitespace-nowrap">
         {(page - 1) * limit + (index + 1)}
       </td>
-      <td className="whitespace-nowrap">{item.userId}</td>
-      <td className="whitespace-nowrap">{item.fullName}</td>
-      <td className="whitespace-nowrap">{item.sponsorId}</td>
-      <td className="whitespace-nowrap">{item.level}</td>
-      <td className="whitespace-nowrap">{item.joiningDate}</td>
-      <td className="whitespace-nowrap">{item.activationDate}</td>
+      <td className="">{item.userId}</td>
+      <td className="">{item.fullName}</td>
+      <td className="">{item.sponsorId}</td>
+      <td className="">{item.level}</td>
+      <td className="">{item.joiningDate}</td>
+      <td className="">{item.activationDate}</td>
     </tr>
   );
 
