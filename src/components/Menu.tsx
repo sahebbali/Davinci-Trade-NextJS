@@ -160,6 +160,30 @@ const menuItems = [
       },
     ],
   },
+  {
+    title: "Support",
+    icon: <FaBriefcase size={18} />,
+    items: [
+      {
+        icon: <MdFlipCameraAndroid size={16} />,
+        label: "Add Support Ticket",
+        href: "/user/add-ticket",
+        visible: ["user"],
+      },
+      {
+        icon: <SiLevelsdotfyi size={16} />,
+        label: "My Support Tickets",
+        href: "/user/my-tickets",
+        visible: ["user"],
+      },
+      {
+        icon: <GiProfit size={16} />,
+        label: "Update",
+        href: "/user/update",
+        visible: ["user"],
+      },
+    ],
+  },
 ];
 
 interface MenuProps {

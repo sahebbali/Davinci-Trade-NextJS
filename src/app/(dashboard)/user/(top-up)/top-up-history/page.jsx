@@ -114,7 +114,7 @@ const LevelOnePage = async ({ searchParams }) => {
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-        <h1 className="text-lg font-semibold">Deposit History ({total})</h1>
+        <h1 className="text-lg font-semibold">TOP Up History ({total})</h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
         </div>
