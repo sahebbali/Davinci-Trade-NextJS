@@ -1,5 +1,6 @@
 "use client";
 
+import { createSupportTicket } from "@/lib/actions/support.action";
 import { useState } from "react";
 import { FaRegCheckCircle, FaHourglassEnd } from "react-icons/fa";
 export default function AddSupportTicket() {
@@ -11,23 +12,45 @@ export default function AddSupportTicket() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
+  const ReSetForm = () => {
+    setFormData({
+      subject: "",
+      category: "General",
+      priority: "medium",
+      description: "",
+    });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (!formData.subject || !formData.description) {
       alert("Please fill in all required fields");
       return;
     }
 
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({
-        subject: "",
-        category: "General",
-        priority: "medium",
-        description: "",
-      });
-      setSubmitted(false);
-    }, 3000);
+    setLoading(true);
+
+    // Call the server action
+    const res = await createSupportTicket({
+      purpose: formData.category,
+      question: formData.description,
+      fullName: "Saheb Bali", // you can replace this dynamically
+      email: "saheb@example.com", // from user context or auth
+      userId: "USER123", // optional: from session
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString(),
+    });
+
+    setLoading(false);
+
+    if (res.success) {
+      alert("Support ticket submitted successfully!");
+      setFormData({ subject: "", category: "", description: "", priority: "" });
+    } else {
+      alert("Failed to submit ticket: " + res.message);
+    }
   };
 
   return (
@@ -134,10 +157,20 @@ export default function AddSupportTicket() {
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}
+                disabled={loading}
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
               >
-                <FaHourglassEnd className="w-5 h-5" />
-                Submit Ticket
+                {loading ? (
+                  <>
+                    <FaHourglassEnd className="w-5 h-5 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <FaHourglassEnd className="w-5 h-5" />
+                    Submit Ticket
+                  </>
+                )}
               </button>
             </div>
           )}

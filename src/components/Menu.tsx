@@ -24,6 +24,10 @@ import { GiProfit } from "react-icons/gi";
 import { FaPersonBooth } from "react-icons/fa";
 import { FaPersonDotsFromLine } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
+import { MdSupportAgent } from "react-icons/md";
+import { MdOutlineContactSupport } from "react-icons/md";
+import { MdBrowserNotSupported } from "react-icons/md";
+import { GrUpdate } from "react-icons/gr";
 
 import { useSession } from "next-auth/react";
 
@@ -162,22 +166,22 @@ const menuItems = [
   },
   {
     title: "Support",
-    icon: <FaBriefcase size={18} />,
+    icon: <MdSupportAgent size={18} />,
     items: [
       {
-        icon: <MdFlipCameraAndroid size={16} />,
+        icon: <MdOutlineContactSupport size={16} />,
         label: "Add Support Ticket",
         href: "/user/add-ticket",
         visible: ["user"],
       },
       {
-        icon: <SiLevelsdotfyi size={16} />,
+        icon: <MdBrowserNotSupported size={16} />,
         label: "My Support Tickets",
         href: "/user/my-tickets",
         visible: ["user"],
       },
       {
-        icon: <GiProfit size={16} />,
+        icon: <GrUpdate size={16} />,
         label: "Update",
         href: "/user/update",
         visible: ["user"],
