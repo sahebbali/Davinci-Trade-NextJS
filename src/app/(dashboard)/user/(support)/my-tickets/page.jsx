@@ -32,8 +32,8 @@ const MyTicketsPage = async ({ searchParams }) => {
         {(page - 1) * limit + (index + 1)}
         {/* 12 */}
       </td>
-      <td className="whitespace-nowrap">{item.userId}</td>
-      <td className="whitespace-nowrap">{item.fullName}</td>
+      {/* <td className="whitespace-nowrap">{item.userId}</td>
+      <td className="whitespace-nowrap">{item.fullName}</td> */}
 
       <td className="whitespace-nowrap">{item.purpose}</td>
       <td className="whitespace-nowrap">{item.question}</td>
