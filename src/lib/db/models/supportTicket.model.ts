@@ -12,6 +12,7 @@ export interface ISupportTicket extends Document {
   answer?: string;
   date?: string;
   time?: string;
+  priority?: string;
   isResponse?: boolean;
   createdAt: Date;
   updatedAt: Date;

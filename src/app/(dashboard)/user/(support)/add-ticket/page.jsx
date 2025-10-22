@@ -1,9 +1,13 @@
 "use client";
 
+import { useToast } from "@/components/ToastProvider";
 import { createSupportTicket } from "@/lib/actions/support.action";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FaRegCheckCircle, FaHourglassEnd } from "react-icons/fa";
+import { FaHourglassEnd } from "react-icons/fa";
 export default function AddSupportTicket() {
+  const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     subject: "",
     category: "General",
@@ -11,12 +15,10 @@ export default function AddSupportTicket() {
     description: "",
   });
 
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const ReSetForm = () => {
     setFormData({
-      subject: "",
       category: "General",
       priority: "medium",
       description: "",
@@ -25,8 +27,8 @@ export default function AddSupportTicket() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.subject || !formData.description) {
-      alert("Please fill in all required fields");
+    if (!formData.description) {
+      showToast("Please fill in all required fields");
       return;
     }
 
@@ -35,21 +37,20 @@ export default function AddSupportTicket() {
     // Call the server action
     const res = await createSupportTicket({
       purpose: formData.category,
-      question: formData.description,
-      fullName: "Saheb Bali", // you can replace this dynamically
-      email: "saheb@example.com", // from user context or auth
-      userId: "USER123", // optional: from session
-      date: new Date().toLocaleDateString(),
+      priority: formData.priority,
+      question: formData.description, // optional: from session
+      date: new Date().toDateString(),
       time: new Date().toLocaleTimeString(),
     });
 
     setLoading(false);
 
     if (res.success) {
-      alert("Support ticket submitted successfully!");
-      setFormData({ subject: "", category: "", description: "", priority: "" });
+      showToast("Support ticket submitted successfully!");
+      ReSetForm();
+      router.push("/user/my-tickets");
     } else {
-      alert("Failed to submit ticket: " + res.message);
+      showToast("Failed to submit ticket: " + res.message);
     }
   };
 
@@ -68,112 +69,82 @@ export default function AddSupportTicket() {
 
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          {submitted ? (
-            <div className="text-center py-12">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <FaRegCheckCircle className="w-8 h-8 text-green-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Ticket Submitted!
-              </h2>
-              <p className="text-gray-600">
-                Your support ticket has been created successfully. We'll respond
-                within 24 hours.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {/* Subject */}
+          <div className="space-y-6">
+            {/* Category and Priority */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Subject *
+                  Category *
                 </label>
-                <input
-                  type="text"
-                  value={formData.subject}
+                <select
+                  value={formData.category}
                   onChange={(e) =>
-                    setFormData({ ...formData, subject: e.target.value })
+                    setFormData({ ...formData, category: e.target.value })
                   }
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Brief description of your issue"
-                />
+                >
+                  <option>General</option>
+                  <option>Technical</option>
+                  <option>Billing</option>
+                  <option>Earing</option>
+                  <option>Account</option>
+                  <option>Commission</option>
+                  <option>Registration</option>
+                </select>
               </div>
-
-              {/* Category and Priority */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Category *
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  >
-                    <option>General</option>
-                    <option>Technical</option>
-                    <option>Billing</option>
-                    <option>Account</option>
-                    <option>Commission</option>
-                    <option>Registration</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Priority *
-                  </label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) =>
-                      setFormData({ ...formData, priority: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Description */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Description *
+                  Priority *
                 </label>
-                <textarea
-                  value={formData.description}
+                <select
+                  value={formData.priority}
                   onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
+                    setFormData({ ...formData, priority: e.target.value })
                   }
-                  rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-                  placeholder="Please provide detailed information about your issue..."
-                />
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
               </div>
-
-              {/* Submit Button */}
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-              >
-                {loading ? (
-                  <>
-                    <FaHourglassEnd className="w-5 h-5 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <FaHourglassEnd className="w-5 h-5" />
-                    Submit Ticket
-                  </>
-                )}
-              </button>
             </div>
-          )}
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Description *
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                rows={6}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                placeholder="Please provide detailed information about your issue..."
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+            >
+              {loading ? (
+                <>
+                  <FaHourglassEnd className="w-5 h-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <FaHourglassEnd className="w-5 h-5" />
+                  Submit Ticket
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Info Box */}

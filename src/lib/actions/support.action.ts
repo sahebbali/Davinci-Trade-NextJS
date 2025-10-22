@@ -2,10 +2,8 @@
 
 import { connectToDatabase } from "../db";
 import SupportTicket from "../db/models/supportTicket.model";
+import { getCurrentUser } from "../getCurrentUser";
 export async function createSupportTicket(data: {
-  userId?: string;
-  fullName?: string;
-  email?: string;
   purpose?: string;
   previous_ticket_reff?: string;
   image?: string;
@@ -14,10 +12,15 @@ export async function createSupportTicket(data: {
   time?: string;
 }) {
   try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
     await connectToDatabase();
 
     const newTicket = await SupportTicket.create({
       ...data,
+      userId: currentUser.userId,
+      fullName: currentUser.fullName || "",
+      email: currentUser.email || "",
       identity: `TICKET-${Date.now()}`,
       isResponse: false,
     });
