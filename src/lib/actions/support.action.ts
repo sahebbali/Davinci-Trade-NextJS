@@ -32,11 +32,40 @@ export async function createSupportTicket(data: {
   }
 }
 
-export async function getAllSupportTickets() {
+export async function getAllSupportTickets(
+  page: number = 1,
+  limit: number = 10
+) {
   try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
+
     await connectToDatabase();
-    const tickets = await SupportTicket.find().sort({ createdAt: -1 });
-    return { success: true, tickets };
+
+    const skip = (page - 1) * limit;
+
+    // Fetch paginated tickets
+    const tickets = await SupportTicket.find({ userId: currentUser.userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(); // converts Mongoose docs to plain JS objects
+
+    // Count total tickets for pagination
+    const total = await SupportTicket.countDocuments({
+      userId: currentUser.userId,
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      success: true,
+      data: tickets,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

@@ -9,7 +9,6 @@ export default function AddSupportTicket() {
   const router = useRouter();
   const { showToast } = useToast();
   const [formData, setFormData] = useState({
-    subject: "",
     category: "General",
     priority: "medium",
     description: "",
