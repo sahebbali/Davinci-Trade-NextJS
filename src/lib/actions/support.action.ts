@@ -1,7 +1,7 @@
 "use server";
 
-import { connectToDatabase } from "../db";
 import SupportTicket from "../db/models/supportTicket.model";
+import { connectToDatabase } from "../db";
 import { getCurrentUser } from "../getCurrentUser";
 export async function createSupportTicket(data: {
   purpose?: string;

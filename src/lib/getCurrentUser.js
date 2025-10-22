@@ -23,6 +23,8 @@ export async function getCurrentUser() {
     id: currentUser._id || "",
     userId: currentUser.userId || "",
     fullName: currentUser.fullName || "",
+    sponsorName: currentUser.sponsorName || "",
+    sponsorId: currentUser.sponsorId || "",
     email: currentUser.email || "",
     phone: currentUser.phone || "",
     address: currentUser.address || "",

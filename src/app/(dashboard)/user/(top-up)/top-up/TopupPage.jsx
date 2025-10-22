@@ -1,4 +1,5 @@
 "use client";
+import { createPackageBuyInfo } from "@/lib/actions/packageBuyInfoActions";
 import React, { useState } from "react";
 
 const TopupPage = () => {
@@ -6,20 +7,31 @@ const TopupPage = () => {
   const [userId, setUserId] = useState("AB050820250002"); // Example default
   const [packageAmount, setPackageAmount] = useState("");
   const [selfInvestment, setSelfInvestment] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!packageAmount || packageAmount <= 0) {
       alert("Please enter a valid package amount.");
       return;
     }
+    setLoading(true);
+    console.log({ packageAmount });
 
-    // Simulate Top-Up
-    setSelfInvestment((prev) => prev + parseFloat(packageAmount));
-    setPackageAmount("");
+    const res = await createPackageBuyInfo({
+      packageAmount: Number(packageAmount),
+      packageType: "top-up",
+    });
 
-    alert(`✅ Top-up of ₹${packageAmount} successful!`);
+    if (res.success) {
+      setLoading(false);
+      alert("Package created successfully!");
+      console.log("Created package:", res.data);
+    } else {
+      setLoading(false);
+      alert("Error: " + res.message);
+    }
   };
 
   return (
@@ -93,9 +105,10 @@ const TopupPage = () => {
           <div className="flex justify-center">
             <button
               type="submit"
+              disabled={loading}
               className="px-6 py-3 text-sm sm:text-base rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              🚀 Initiate Top-Up
+              {loading ? "Processing..." : "🚀 Initiate Top-Up"}
             </button>
           </div>
         </form>
