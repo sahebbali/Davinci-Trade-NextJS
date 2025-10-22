@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import { FaRegCheckCircle, FaHourglassEnd } from "react-icons/fa";
 export default function AddSupportTicket() {
   const [formData, setFormData] = useState({
