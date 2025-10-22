@@ -4,10 +4,10 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { getAllSupportTickets } from "@/lib/actions/support.action";
 
-const MyTicketsPage = async ({ searchParams }) => {
+const UpdatePage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = 10;
-  // console.log({ page, limit });
+  //   console.log({ page, limit });
   // ✅ Fetch deposits from server action
   const res = await getAllSupportTickets(page, limit);
   // console.log({ res });
@@ -17,10 +17,8 @@ const MyTicketsPage = async ({ searchParams }) => {
   const columns = [
     { header: "Sl", accessor: "sl" },
 
-    { header: "purpose", accessor: "Purpose" },
-    { header: "question", accessor: "Question" },
-    { header: "response", accessor: "Response" },
-    { header: "date", accessor: "Date" },
+    { header: "purpose", accessor: "Title" },
+    { header: "question", accessor: "Description" },
   ];
 
   const renderRow = (item, index) => (
@@ -32,13 +30,9 @@ const MyTicketsPage = async ({ searchParams }) => {
         {(page - 1) * limit + (index + 1)}
         {/* 12 */}
       </td>
-      {/* <td className="whitespace-nowrap">{item.userId}</td>
-      <td className="whitespace-nowrap">{item.fullName}</td> */}
 
       <td className="whitespace-nowrap">{item.purpose}</td>
       <td className="whitespace-nowrap">{item.question}</td>
-      <td className="whitespace-nowrap">{item.response}</td>
-      <td className="whitespace-nowrap">{item.date}</td>
     </tr>
   );
 
@@ -48,7 +42,9 @@ const MyTicketsPage = async ({ searchParams }) => {
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-        <h1 className="text-lg font-semibold">My Tickets History ({total})</h1>
+        <h1 className="text-lg font-semibold">
+          System Update History ({total})
+        </h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
         </div>
@@ -67,4 +63,4 @@ const MyTicketsPage = async ({ searchParams }) => {
   );
 };
 
-export default MyTicketsPage;
+export default UpdatePage;
