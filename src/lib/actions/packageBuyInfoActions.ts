@@ -4,6 +4,7 @@ import { connectToDatabase } from "../db";
 import { getCurrentUser } from "../getCurrentUser";
 import PackageBuyInfo from "../db/models/PackageBuyInfo.model";
 import Wallet from "../db/models/wallet.model";
+import { generateUniqueTOPUPID } from "../helper";
 
 export async function createPackageBuyInfo(data: {
   userId?: string;
@@ -28,10 +29,11 @@ export async function createPackageBuyInfo(data: {
     // ✅ Connect to database
     await connectToDatabase();
 
-    const { depositBalance = 0 } = await Wallet.findOne({
-      userId: currentUser.userId,
-    });
-    console.log("Deposit Balance:", depositBalance);
+    const { depositBalance = 0 } =
+      (await Wallet.findOne({
+        userId: currentUser.userId,
+      })) || {};
+    // console.log("Deposit Balance:", depositBalance);
     // ✅ Basic validation
     if (!data.packageAmount) {
       throw new Error("Missing required fields: packageAmount");
@@ -52,7 +54,7 @@ export async function createPackageBuyInfo(data: {
       sponsorId: currentUser?.sponsorId || "default-sponsor-id",
       sponsorName: currentUser?.sponsorName || "Default Sponsor",
       packageLimit: data.packageLimit || data.packageAmount * returnRate,
-      packageId: "default-package-id",
+      packageId: generateUniqueTOPUPID(),
       packageAmount: data.packageAmount,
       totalReturnedAmount: 0,
       date: new Date().toLocaleDateString(),

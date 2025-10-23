@@ -16,3 +16,9 @@ export function generateUniqueUserID() {
   const userID = `DT-${randomNumericString}`;
   return userID;
 }
+export function generateUniqueTOPUPID() {
+  const userIDLength = 12;
+  const randomNumericString = generateRandomNumericString(userIDLength);
+  const userID = `DT-TOP-${randomNumericString}`;
+  return userID;
+}
