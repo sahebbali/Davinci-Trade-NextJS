@@ -4,7 +4,7 @@ import { connectToDatabase } from "../db";
 import { getCurrentUser } from "../getCurrentUser";
 import PackageBuyInfo from "../db/models/PackageBuyInfo.model";
 import Wallet from "../db/models/wallet.model";
-import { generateUniqueTOPUPID } from "../helper";
+import { generateUniqueTOPUPID, updateMultipleWalletBalances } from "../helper";
 
 export async function createPackageBuyInfo(data: {
   userId?: string;
@@ -62,8 +62,13 @@ export async function createPackageBuyInfo(data: {
       startDate: new Date().toISOString(),
       startDateInt: Date.now(),
       status: "pending",
+      isActive: true,
     });
 
+    updateMultipleWalletBalances(currentUser.userId, {
+      depositBalance: -data.packageAmount,
+      selfInvestment: data.packageAmount,
+    });
     // ✅ Convert to plain object (Next.js safe)
 
     return {
