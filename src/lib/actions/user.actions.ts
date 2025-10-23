@@ -188,3 +188,24 @@ export async function getUserById(userId: string) {
   if (!user) throw new Error("User not found");
   return JSON.parse(JSON.stringify(user)) as IUser;
 }
+
+export const getUserWallet = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
+    await connectToDatabase();
+
+    // Try to find the user's wallet
+    const wallet = await Wallet.findOne({ userId: currentUser.userId }).lean();
+
+    // If wallet not found, return default (0 balance everywhere)
+    if (!wallet) {
+      return "User wallet not found.";
+    }
+
+    return wallet;
+  } catch (error: any) {
+    console.error("Error fetching wallet:", error.message);
+    throw new Error("Failed to fetch user wallet.");
+  }
+};

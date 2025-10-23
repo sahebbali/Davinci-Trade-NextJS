@@ -1,15 +1,35 @@
 "use client";
 import { useToast } from "@/components/ToastProvider";
 import { createPackageBuyInfo } from "@/lib/actions/packageBuyInfoActions";
-import React, { useState } from "react";
+import { getUserWallet } from "@/lib/actions/user.actions";
+import React, { useEffect, useState } from "react";
 
 const TopupPage = () => {
   const { showToast } = useToast();
-  // 🔹 Dynamic states
-  const [userId, setUserId] = useState("AB050820250002"); // Example default
+
+  const [userId, setUserId] = useState("AB050820250002");
   const [packageAmount, setPackageAmount] = useState("");
   const [selfInvestment, setSelfInvestment] = useState(0);
+  const [currentBalance, setCurrentBalance] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  // ✅ Fetch wallet once
+  useEffect(() => {
+    async function fetchWallet() {
+      try {
+        const wallet = await getUserWallet();
+        if (wallet) {
+          setSelfInvestment(wallet.selfInvestment || 0);
+          setCurrentBalance(wallet.depositBalance || 0);
+          console.log("Fetched wallet:", wallet);
+        }
+      } catch (error) {
+        console.error("Error fetching wallet:", error);
+      }
+    }
+
+    fetchWallet();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,27 +38,39 @@ const TopupPage = () => {
       alert("Please enter a valid package amount.");
       return;
     }
+
     setLoading(true);
-    console.log({ packageAmount });
 
     const res = await createPackageBuyInfo({
       packageAmount: Number(packageAmount),
       packageType: "top-up",
     });
 
+    setLoading(false);
+
     if (res.success) {
-      setLoading(false);
       showToast("Package created successfully!", "success");
-      console.log("Created package:", res.data);
+
+      // ✅ Refresh wallet after package purchase
+      try {
+        const updatedWallet = await getUserWallet();
+        if (updatedWallet) {
+          setSelfInvestment(updatedWallet.selfInvestment || 0);
+          setCurrentBalance(updatedWallet.depositBalance || 0);
+        }
+      } catch (err) {
+        console.error("Failed to refresh wallet:", err);
+      }
+
+      setPackageAmount(""); // reset input
     } else {
-      setLoading(false);
       showToast("Error: " + res.message, "error");
     }
   };
 
   return (
     <div className="max-h-fit flex bg-gray-100 ">
-      <div className="bg-white shadow-xl rounded-xl p-6 sm:p-8 lg:p-10 w-full  border border-gray-200">
+      <div className="bg-white shadow-xl rounded-xl p-6 sm:p-8 lg:p-10 w-full border border-gray-200">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center sm:text-left">
@@ -48,15 +80,13 @@ const TopupPage = () => {
             Self Investment: ₹ {selfInvestment.toFixed(2)}
           </div>
           <div className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm sm:text-base font-semibold shadow-sm text-center">
-            Current Balance: ₹ {5000}
+            Current Balance: ₹ {currentBalance.toFixed(2)}
           </div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6 w-full">
-          {/* Inputs Row */}
           <div className="flex flex-col md:flex-row gap-6">
-            {/* User ID */}
             <div className="flex-1">
               <label
                 htmlFor="userId"
@@ -77,7 +107,6 @@ const TopupPage = () => {
               </p>
             </div>
 
-            {/* Package Amount */}
             <div className="flex-1">
               <label
                 htmlFor="packageAmount"
@@ -103,7 +132,6 @@ const TopupPage = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-center">
             <button
               type="submit"
