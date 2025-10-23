@@ -3,6 +3,7 @@
 import { connectToDatabase } from "../db";
 import { getCurrentUser } from "../getCurrentUser";
 import PackageBuyInfo from "../db/models/PackageBuyInfo.model";
+import Wallet from "../db/models/wallet.model";
 
 export async function createPackageBuyInfo(data: {
   userId?: string;
@@ -27,13 +28,24 @@ export async function createPackageBuyInfo(data: {
     // ✅ Connect to database
     await connectToDatabase();
 
+    const { depositBalance = 0 } = await Wallet.findOne({
+      userId: currentUser.userId,
+    });
+    console.log("Deposit Balance:", depositBalance);
     // ✅ Basic validation
     if (!data.packageAmount) {
       throw new Error("Missing required fields: packageAmount");
     }
+    if (data.packageAmount <= 0) {
+      throw new Error("Package amount must be greater than zero");
+    }
+    if (depositBalance < data.packageAmount) {
+      throw new Error("Insufficient deposit balance");
+    }
+
     const returnRate = 5; // Example return rate multiplier
     // ✅ Create new document
-    const newPackage = await PackageBuyInfo.create({
+    await PackageBuyInfo.create({
       ...data,
       userId: currentUser?.userId,
       fullName: currentUser?.fullName,
@@ -55,7 +67,6 @@ export async function createPackageBuyInfo(data: {
     return {
       success: true,
       message: "Package purchase successfully",
-      data: newPackage,
     };
   } catch (error: any) {
     console.error("Error creating package buy info:", error);

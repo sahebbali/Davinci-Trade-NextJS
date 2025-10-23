@@ -1,8 +1,10 @@
 "use client";
+import { useToast } from "@/components/ToastProvider";
 import { createPackageBuyInfo } from "@/lib/actions/packageBuyInfoActions";
 import React, { useState } from "react";
 
 const TopupPage = () => {
+  const { showToast } = useToast();
   // 🔹 Dynamic states
   const [userId, setUserId] = useState("AB050820250002"); // Example default
   const [packageAmount, setPackageAmount] = useState("");
@@ -26,11 +28,11 @@ const TopupPage = () => {
 
     if (res.success) {
       setLoading(false);
-      alert("Package created successfully!");
+      showToast("Package created successfully!", "success");
       console.log("Created package:", res.data);
     } else {
       setLoading(false);
-      alert("Error: " + res.message);
+      showToast("Error: " + res.message, "error");
     }
   };
 

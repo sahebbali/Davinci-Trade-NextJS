@@ -33,9 +33,6 @@ export interface IPackageBuyInfo extends Document {
   updatedAt: Date;
 }
 
-/**
- * Schema
- */
 const PackageBuyInfoSchema = new Schema<IPackageBuyInfo>(
   {
     userId: {
