@@ -73,7 +73,7 @@ export const updateMultipleWalletBalances = async (
   return wallet;
 };
 // Helper function to get IST time
-const getIstTime = () => {
+export const getIstTime = () => {
   const now = new Date();
   const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
   const istTime = new Date(now.getTime() + istOffset);
@@ -85,7 +85,7 @@ const getIstTime = () => {
 };
 
 // Helper function to generate random string
-const generateRandomString = (length: number = 16): string => {
+ export const generateRandomString = (length: number = 16): string => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
