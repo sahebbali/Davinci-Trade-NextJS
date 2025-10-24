@@ -1,3 +1,4 @@
+import { PackageRoi } from "./db/models/PackageROI.model";
 import Wallet, { IWallet } from "./db/models/wallet.model";
 
 function generateRandomNumericString(length: number) {
@@ -71,16 +72,46 @@ export const updateMultipleWalletBalances = async (
 
   return wallet;
 };
+// Helper function to get IST time
+const getIstTime = () => {
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+  const istTime = new Date(now.getTime() + istOffset);
+  
+  return {
+    date: istTime.toISOString().split('T')[0],
+    time: istTime.toTimeString().split(' ')[0],
+  };
+};
 
-const createROIHistory = async (
+// Helper function to generate random string
+const generateRandomString = (length: number = 16): string => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+};
+
+interface CreateROIHistoryParams {
+  userId: string;
+  fullName: string;
+  packageAmount: number;
+  commissionPercentage: number;
+  commissionAmount: number;
+  incomeDay: number;
+}
+
+export const createROIHistory = async ({
   userId,
   fullName,
   packageAmount,
   commissionPercentage,
   commissionAmount,
-  incomeDay
-) => {
-  console.log("crate ROI");
+  incomeDay,
+}: CreateROIHistoryParams): Promise<void> => {
+  console.log("Create ROI");
   console.log({
     userId,
     fullName,
@@ -89,19 +120,19 @@ const createROIHistory = async (
     commissionAmount,
     incomeDay,
   });
+
+  const istTime = getIstTime();
+  
   await PackageRoi.create({
     userId,
     fullName,
     package: packageAmount,
-    commissionPercentage: commissionPercentage,
+    commissionPercentage,
     commissionAmount: Number(commissionAmount).toFixed(3),
-    // totalCommissionAmount: Number(
-    //   ext?.totalReturnedAmount + roiPerDayCommissionAmount
-    // ).toFixed(3),
     incomeDay,
-    incomeDate: new Date(getIstTime().date).toDateString(),
-    incomeTime: getIstTime().time,
-    incomeDateInt: new Date(getIstTime().date).getTime(),
-    transactionId: generateRandomNumericString(10),
+    incomeDate: new Date(istTime.date).toDateString(),
+    incomeTime: istTime.time,
+    incomeDateInt: new Date(istTime.date).getTime(),
+    transactionId: generateRandomString(),
   });
 };
