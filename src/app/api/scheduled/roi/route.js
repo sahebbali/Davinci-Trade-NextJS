@@ -1,3 +1,5 @@
+import { connectToDatabase } from "@/lib/db";
+import PackageBuyInfo from "@/lib/db/models/PackageBuyInfo.model";
 import { NextResponse } from "next/server";
 // import handleFirstROI from '@/lib/handleFirstROI';
 
@@ -23,7 +25,22 @@ export async function GET(request) {
 export async function POST() {
 
   try {
-    // await handleFirstROI();
+    await connectToDatabase();
+   const activePackages = await PackageBuyInfo.find({
+      isActive: true,
+      // isFirstROI: true,
+      // startDateInt: { $lte: dateInt },
+      // isROIFree: false,
+      // status: "success",
+    });
+    console.log({ activePackages });
+    console.log(`Total active packages: ${activePackages.length}`);
+
+    if (activePackages.length === 0) {
+      console.log("No eligible packages for ROI distribution.");
+      return;
+    }
+
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
