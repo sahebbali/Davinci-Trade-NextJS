@@ -2,18 +2,18 @@
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { getUserDepositHistory } from "@/lib/actions/deposit.action";
+import { getAllROIIncome } from "@/lib/actions/Earning.action";
 
 const ROIIncomePage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = 10;
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
-  const res = await getUserDepositHistory(page, limit);
-  // console.log({ res });
-  const deposits = res.success ? res.data : [];
+  const res = await getAllROIIncome(page, limit);
+  console.log({ res });
+  const ROIIncome = res.success ? res.data : [];
   const total = res.success ? res.total : 0;
-
+  console.log({ ROIIncome });
   const columns = [
     { header: "Sl", accessor: "sl" },
     { header: "User ID", accessor: "userId" },
@@ -34,7 +34,6 @@ const ROIIncomePage = async ({ searchParams }) => {
       <td className="whitespace-nowrap">{item.userId}</td>
       <td className="whitespace-nowrap">{item.fullName}</td>
       <td className="whitespace-nowrap">${item.amount}</td>
-
       <td className="whitespace-nowrap">{item.transactionId}</td>
     </tr>
   );
@@ -45,7 +44,7 @@ const ROIIncomePage = async ({ searchParams }) => {
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-        <h1 className="text-lg font-semibold">Deposit History ({total})</h1>
+        <h1 className="text-lg font-semibold">ROI Income History ({total})</h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
         </div>
@@ -53,7 +52,7 @@ const ROIIncomePage = async ({ searchParams }) => {
 
       {/* TABLE WRAPPER */}
       <div className="overflow-x-auto">
-        <Table columns={columns} renderRow={renderRow} data={deposits} />
+        <Table columns={columns} renderRow={renderRow} data={ROIIncome} />
       </div>
 
       {/* PAGINATION */}

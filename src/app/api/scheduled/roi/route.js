@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/db";
 import PackageBuyInfo from "@/lib/db/models/PackageBuyInfo.model";
+import { PackageRoi } from "@/lib/db/models/PackageROI.model";
 import {
   generateRandomString,
   getIstTime,
@@ -146,28 +147,32 @@ const createROIHistory = async (
   commissionAmount,
   incomeDay
 ) => {
-  console.log("Create ROI");
-  console.log({
-    userId,
-    fullName,
-    packageAmount,
-    commissionPercentage,
-    commissionAmount,
-    incomeDay,
-  });
+  // console.log("Create ROI");
+  // console.log({
+  //   userId,
+  //   fullName,
+  //   packageAmount,
+  //   commissionPercentage,
+  //   commissionAmount,
+  //   incomeDay,
+  // });
+  try {
+    await connectToDatabase();
+    const istTime = getIstTime();
 
-  const istTime = getIstTime();
-
-  await PackageRoi.create({
-    userId,
-    fullName,
-    package: packageAmount,
-    commissionPercentage,
-    commissionAmount: Number(commissionAmount).toFixed(3),
-    incomeDay,
-    incomeDate: new Date(istTime.date).toDateString(),
-    incomeTime: istTime.time,
-    incomeDateInt: new Date(istTime.date).getTime(),
-    transactionId: generateRandomString(),
-  });
+    await PackageRoi.create({
+      userId,
+      fullName,
+      package: packageAmount,
+      commissionPercentage,
+      commissionAmount: Number(commissionAmount).toFixed(3),
+      incomeDay,
+      incomeDate: new Date(istTime.date).toDateString(),
+      incomeTime: istTime.time,
+      incomeDateInt: new Date(istTime.date).getTime(),
+      transactionId: generateRandomString(),
+    });
+  } catch (error) {
+    console.error("Error creating ROI history:", error);
+  }
 };
