@@ -7,18 +7,22 @@ import { getAllROIIncome } from "@/lib/actions/Earning.action";
 const ROIIncomePage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = 10;
-  console.log({ page, limit });
+  // console.log({ page, limit });
   // ✅ Fetch deposits from server action
   const res = await getAllROIIncome(page, limit);
-  console.log({ res });
+  // console.log({ res });
   const ROIIncome = res.success ? res.data : [];
   const total = res.success ? res.total : 0;
-  console.log({ ROIIncome });
+  // console.log({ ROIIncome });
   const columns = [
     { header: "Sl", accessor: "sl" },
     { header: "User ID", accessor: "userId" },
-    { header: "fullName", accessor: "fullName" },
-    { header: "Amount", accessor: "amount" },
+    // { header: "fullName", accessor: "fullName" },
+    { header: "Package", accessor: "package" },
+    { header: "Commission Percentage", accessor: "commissionPercentage" },
+    { header: "Amount", accessor: "commissionAmount" },
+    { header: "incomeDay", accessor: "incomeDay" },
+    { header: "Date", accessor: "incomeDate" },
     { header: "Transaction ID", accessor: "transactionId" },
   ];
 
@@ -32,8 +36,12 @@ const ROIIncomePage = async ({ searchParams }) => {
         {/* 12 */}
       </td>
       <td className="whitespace-nowrap">{item.userId}</td>
-      <td className="whitespace-nowrap">{item.fullName}</td>
-      <td className="whitespace-nowrap">${item.amount}</td>
+      {/* <td className="whitespace-nowrap">{item.fullName}</td> */}
+      <td className="whitespace-nowrap align-middle">${item.package}</td>
+      <td className="whitespace-nowrap">{item.commissionPercentage} %</td>
+      <td className="whitespace-nowrap">${item.commissionAmount}</td>
+      <td className="whitespace-nowrap">{item.incomeDay}</td>
+      <td className="whitespace-nowrap">{item.incomeDate}</td>
       <td className="whitespace-nowrap">{item.transactionId}</td>
     </tr>
   );
