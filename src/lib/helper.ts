@@ -41,6 +41,7 @@ export const updateMultipleWalletBalances = async (
     "BidingTeamBonus",
     "depositBalance",
     "totalIncome",
+    "activeIncome",
     "winingAmount",
     "winingFromLevel",
     "withdrawalBallance",
@@ -77,17 +78,18 @@ export const getIstTime = () => {
   const now = new Date();
   const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
   const istTime = new Date(now.getTime() + istOffset);
-  
+
   return {
-    date: istTime.toISOString().split('T')[0],
-    time: istTime.toTimeString().split(' ')[0],
+    date: istTime.toISOString().split("T")[0],
+    time: istTime.toTimeString().split(" ")[0],
   };
 };
 
 // Helper function to generate random string
- export const generateRandomString = (length: number = 16): string => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
+export const generateRandomString = (length: number = 16): string => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
@@ -122,7 +124,7 @@ export const createROIHistory = async ({
   });
 
   const istTime = getIstTime();
-  
+
   await PackageRoi.create({
     userId,
     fullName,
