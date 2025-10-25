@@ -3,6 +3,7 @@ import PackageBuyInfo from "@/lib/db/models/PackageBuyInfo.model";
 import {
   generateRandomString,
   getIstTime,
+  updateMultipleWalletBalances,
 } from "@/lib/helper";
 import { NextResponse } from "next/server";
 // import handleFirstROI from '@/lib/handleFirstROI';
@@ -40,8 +41,8 @@ export async function POST() {
     // Fetch active packages
     const activePackages = await PackageBuyInfo.find({
       isActive: true,
-      isROIFree: false,
-      status: "success",
+      // isROIFree: false,
+      // status: "success",
     }).lean();
 
     console.log(`Total active packages: ${activePackages.length}`);
@@ -86,16 +87,20 @@ export async function POST() {
         if (!updatedPackage) {
           throw new Error(`Package ${pkg.packageId} not found or not active`);
         }
-
-        // Create ROI history
-        await createROIHistory({
-          userId: pkg.userId,
-          fullName: pkg.fullName,
-          packageAmount: pkg.packageAmount,
-          commissionPercentage: COMMISSION_PERCENTAGE,
-          commissionAmount,
-          incomeDay: updatedPackage.incomeDay,
+        await updateMultipleWalletBalances(pkg.userId, {
+          totalIncome: commissionAmount,
+          activeIncome: commissionAmount,
+          roiIncome: commissionAmount,
         });
+        // Create ROI history
+        await createROIHistory(
+          pkg.userId,
+          pkg.fullName,
+          pkg.packageAmount,
+          COMMISSION_PERCENTAGE,
+          commissionAmount,
+          updatedPackage.incomeDay
+        );
 
         return {
           packageId: pkg.packageId,

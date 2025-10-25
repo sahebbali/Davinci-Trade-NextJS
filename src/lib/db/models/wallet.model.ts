@@ -19,6 +19,7 @@ export interface IWallet extends Document {
   withdrawalBallance: number;
   rewardIncome: number;
   gameWallet: number;
+  activeIncome: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,6 +44,7 @@ const walletSchema = new Schema<IWallet>(
     withdrawalBallance: { type: Number, default: 0 },
     rewardIncome: { type: Number, default: 0 },
     gameWallet: { type: Number, default: 0 },
+    activeIncome: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

@@ -80,3 +80,53 @@ export async function createPackageBuyInfo(data: {
     return { success: false, message: error.message };
   }
 }
+
+export async function getPackageBuyInfo(page: number = 1, limit: number = 10) {
+  try {
+    // ✅ Ensure page and limit are positive integers
+    page = Math.max(1, Number(page));
+    limit = Math.max(1, Number(limit));
+    const skip = (page - 1) * limit;
+
+    // ✅ Get authenticated user
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      throw new Error("User not authenticated");
+    }
+
+    // ✅ Connect to MongoDB
+    await connectToDatabase();
+
+    // ✅ Fetch paginated package buy info
+    const packageBuyInfos = await PackageBuyInfo.find({
+      userId: currentUser.userId,
+    })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    // ✅ Count total documents
+    const total = await PackageBuyInfo.countDocuments({
+      userId: currentUser.userId,
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      success: true,
+      data: packageBuyInfos,
+
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  } catch (error: any) {
+    console.error("❌ Error fetching package buy info:", error);
+    return {
+      success: false,
+      message: error.message || "Failed to fetch package buy info",
+    };
+  }
+}
