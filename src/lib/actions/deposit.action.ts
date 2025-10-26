@@ -1,6 +1,7 @@
 "use server";
 import { connectToDatabase } from "../db";
 import Deposit from "../db/models/deposit.model";
+import Wallet from "../db/models/wallet.model";
 import { getCurrentUser } from "../getCurrentUser";
 
 interface CreateDepositProps {
@@ -103,5 +104,30 @@ export async function updateDepositStatus(
   } catch (error) {
     console.error("Error updating deposit status:", error);
     throw new Error("Failed to update deposit");
+  }
+}
+
+export async function getUserWallet() {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "User not authenticated" };
+    }
+
+    await connectToDatabase();
+
+    // Pagination logic
+
+    const [deposits] = await Promise.all([
+      Wallet.find({ userId: user.userId }),
+    ]);
+
+    return {
+      success: true,
+      data: deposits,
+    };
+  } catch (error) {
+    console.error("❌ Error fetching My wallet:", error);
+    return { success: false, error: "Failed to fetch My Wallet " };
   }
 }

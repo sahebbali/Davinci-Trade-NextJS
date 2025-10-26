@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
   const role = token?.role; // role added to JWT in NextAuth callbacks
 
-  console.log("🔹 Middleware token:", token);
+  // console.log("🔹 Middleware token:", token);
 
   // 🔹 Check route access map
   for (const [pattern, allowedRoles] of Object.entries(routeAccessMap)) {
