@@ -1,13 +1,10 @@
-import { authOptions } from "@/auth";
-import { getServerSession } from "next-auth";
-
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
 export default async function UserPage() {
   const currentUser = await getCurrentUser();
-  console.log("client c", { currentUser });
-  const session = await getServerSession(authOptions);
-  console.log({ session });
+  // console.log("client c", { currentUser });
+  // const session = await getServerSession(authOptions);
+  // console.log({ session });
   const user = {
     name: "John Doe",
     userId: "MLM12345",

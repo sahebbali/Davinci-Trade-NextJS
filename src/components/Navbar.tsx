@@ -6,9 +6,9 @@ import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
-  console.log("nav session", { session });
-  const [isOpen, setIsOpen] = useState(false);
   const role = session?.user?.role;
+  // console.log("nav session", { session });
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
