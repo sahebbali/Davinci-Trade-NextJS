@@ -28,6 +28,15 @@ export default async function UserDashboardPage() {
   const currentUser = await getCurrentUser();
   // console.log("client c", { currentUser }); // Uncomment for debugging
 
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-6 md:p-8 lg:p-10">
+        <h1 className="text-4xl font-extrabold text-gray-800 leading-tight">
+          User not authenticated. Please sign in.
+        </h1>
+      </div>
+    );
+  }
   // Mock data for demonstration, replace with actual fetched data as needed
   const userStats = {
     wallet: 2500.75, // More realistic currency format
