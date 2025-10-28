@@ -1,4 +1,6 @@
+import LogoutButton from "@/components/LogoutButton";
 import { getCurrentUser } from "@/lib/getCurrentUser";
+import { signOut } from "next-auth/react";
 
 export async function generateMetadata() {
   const currentUser = await getCurrentUser();
@@ -44,9 +46,7 @@ export default async function UserDashboardPage() {
         <h1 className="text-4xl font-extrabold text-gray-800 leading-tight">
           Welcome, {currentUser?.fullName || "User"} 👋
         </h1>
-        <button className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out">
-          Logout
-        </button>
+        <LogoutButton />
       </div>
 
       {/* User Info & Rank */}
