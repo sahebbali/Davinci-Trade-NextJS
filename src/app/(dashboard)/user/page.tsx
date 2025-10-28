@@ -1,5 +1,17 @@
 import { getCurrentUser } from "@/lib/getCurrentUser";
 
+export const metadata = {
+  title: "My Wallet | Dashboard",
+  description:
+    "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
+  keywords: [
+    "wallet dashboard",
+    "investment tracker",
+    "earnings summary",
+    "user balance",
+    "crypto income",
+  ],
+};
 export default async function UserPage() {
   const currentUser = await getCurrentUser();
   // console.log("client c", { currentUser });

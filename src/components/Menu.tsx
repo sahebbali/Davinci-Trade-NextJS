@@ -29,10 +29,18 @@ import { MdOutlineContactSupport } from "react-icons/md";
 import { MdBrowserNotSupported } from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
 import { FaPersonRays } from "react-icons/fa6";
+import { MdDashboardCustomize } from "react-icons/md";
 
 import { useSession } from "next-auth/react";
 
 const menuItems = [
+  {
+    title: "Dashboard",
+    icon: <MdDashboardCustomize size={18} />,
+    label: "Dashboard",
+    href: "/user",
+    visible: ["user"],
+  },
   {
     title: "Profile",
     icon: <FiUserCheck size={18} />,
@@ -235,45 +243,65 @@ const Menu = ({ sidebarOpen, setSidebarOpen }: MenuProps) => {
         <div className="flex-1 overflow-y-auto p-4 text-sm">
           {menuItems.map((section) => (
             <div key={section.title} className="mb-2">
-              {/* Section Title */}
-              <button
-                onClick={() => toggleSection(section.title)}
-                className="w-full flex items-center justify-between px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-purple-50 transition-colors"
-              >
-                <span className="flex items-center gap-2">
-                  {section.icon}
-                  {section.title}
-                </span>
-                <FiChevronRight
-                  className={`transition-transform ${
-                    activeSection === section.title ? "rotate-90" : ""
-                  }`}
-                />
-              </button>
+              {/* If section has nested items */}
+              {section.items ? (
+                <>
+                  <button
+                    onClick={() => toggleSection(section.title)}
+                    className="w-full flex items-center justify-between px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-purple-50 transition-colors"
+                  >
+                    <span className="flex items-center gap-2">
+                      {section.icon}
+                      {section.title}
+                    </span>
+                    <FiChevronRight
+                      className={`transition-transform ${
+                        activeSection === section.title ? "rotate-90" : ""
+                      }`}
+                    />
+                  </button>
 
-              {/* Section Items */}
-              {activeSection === section.title && (
-                <div className="flex flex-col gap-1 mt-1 ml-6">
-                  {section.items.map(
-                    (item) =>
-                      item.visible.includes(role) && (
-                        <Link
-                          key={item.label}
-                          href={item.href}
-                          onClick={() => setSidebarOpen(false)}
-                          className={`flex items-center gap-3 py-2 px-2 rounded-md transition-colors
-                          ${
-                            pathname === item.href
-                              ? "bg-purple-100 text-purple-600 font-medium"
-                              : "text-gray-600 hover:bg-purple-50 hover:text-purple-600"
-                          }`}
-                        >
-                          {item.icon}
-                          <span>{item.label}</span>
-                        </Link>
-                      )
+                  {activeSection === section.title && (
+                    <div className="flex flex-col gap-1 mt-1 ml-6">
+                      {section.items.map(
+                        (item) =>
+                          item.visible.includes(role) && (
+                            <Link
+                              key={item.label}
+                              href={item.href}
+                              onClick={() => setSidebarOpen(false)}
+                              className={`flex items-center gap-3 py-2 px-2 rounded-md transition-colors
+                    ${
+                      pathname === item.href
+                        ? "bg-purple-100 text-purple-600 font-medium"
+                        : "text-gray-600 hover:bg-purple-50 hover:text-purple-600"
+                    }`}
+                            >
+                              {item.icon}
+                              <span>{item.label}</span>
+                            </Link>
+                          )
+                      )}
+                    </div>
                   )}
-                </div>
+                </>
+              ) : (
+                // If section is a single link (like Dashboard)
+                section.visible.includes(role) && (
+                  <Link
+                    href={section.href}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`flex items-center gap-3 py-2 px-2 rounded-md transition-colors
+          ${
+            pathname === section.href
+              ? "bg-purple-100 text-purple-600 font-medium"
+              : "text-gray-600 hover:bg-purple-50 hover:text-purple-600"
+          }`}
+                  >
+                    {section.icon}
+                    <span>{section.title}</span>
+                  </Link>
+                )
               )}
             </div>
           ))}
