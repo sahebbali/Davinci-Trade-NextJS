@@ -5,6 +5,18 @@ import TableSearch from "@/components/TableSearch";
 import { getUserDepositHistory } from "@/lib/actions/deposit.action";
 import ProofImageModal from "@/components/ProofImageModal";
 
+export const metadata = {
+  title: "Deposit History | Dashboard",
+  description:
+    "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
+  keywords: [
+    "wallet dashboard",
+    "investment tracker",
+    "earnings summary",
+    "user balance",
+    "crypto income",
+  ],
+};
 const DepositHistoryPage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const limit = 10;

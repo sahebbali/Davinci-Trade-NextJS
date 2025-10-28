@@ -28,6 +28,7 @@ import { MdSupportAgent } from "react-icons/md";
 import { MdOutlineContactSupport } from "react-icons/md";
 import { MdBrowserNotSupported } from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
+import { FaPersonRays } from "react-icons/fa6";
 
 import { useSession } from "next-auth/react";
 
@@ -64,7 +65,7 @@ const menuItems = [
   },
   {
     title: "My Partner",
-    icon: <FaPersonBooth size={18} />,
+    icon: <FaPersonRays size={18} />,
     items: [
       {
         icon: <FaPersonDotsFromLine size={16} />,

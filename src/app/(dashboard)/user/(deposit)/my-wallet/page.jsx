@@ -1,5 +1,6 @@
 // app/wallet/page.tsx
 import { getUserWallet } from "@/lib/actions/deposit.action";
+import Link from "next/link";
 import {
   FaCoins,
   FaGift,
@@ -9,6 +10,43 @@ import {
   FaHandHoldingUsd,
 } from "react-icons/fa";
 
+export const metadata = {
+  title: "My Wallet | Dashboard",
+  description:
+    "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
+  keywords: [
+    "wallet dashboard",
+    "investment tracker",
+    "earnings summary",
+    "user balance",
+    "crypto income",
+  ],
+  openGraph: {
+    title: "My Wallet | Dashboard",
+    description:
+      "Monitor your wallet activity, ROI, rewards, and income breakdown with a clean dashboard interface.",
+    url: "https://yourdomain.com/wallet",
+    siteName: "Your App Name",
+    images: [
+      {
+        url: "https://yourdomain.com/og/wallet-preview.png",
+        width: 1200,
+        height: 630,
+        alt: "Wallet Dashboard Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "My Wallet | Dashboard",
+    description:
+      "Easily view your wallet, ROI, and reward income with a smooth modern dashboard.",
+    images: ["https://yourdomain.com/og/wallet-preview.png"],
+    creator: "@YourTwitterHandle",
+  },
+};
 const currencyFormat = (amount) =>
   amount?.toLocaleString("en-US", { minimumFractionDigits: 2 });
 
@@ -119,9 +157,12 @@ export default async function WalletPage() {
             </p>
           </div>
           <div className="flex space-x-4">
-            <button className="bg-white text-blue-700 px-6 py-3 rounded-full font-bold hover:bg-blue-100 transition">
+            <Link
+              href="/user/deposit-funds"
+              className="bg-white text-blue-700 px-6 py-3 rounded-full font-bold hover:bg-blue-100 transition"
+            >
               Invest Now
-            </button>
+            </Link>
             <button className="border border-white text-white px-6 py-3 rounded-full font-bold hover:bg-white hover:text-blue-700 transition">
               Learn More
             </button>
