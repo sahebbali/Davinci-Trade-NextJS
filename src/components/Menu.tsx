@@ -223,7 +223,7 @@ const menuItems = [
       {
         icon: <FaPersonArrowDownToLine size={16} />,
         label: "All Active Members",
-        href: "/admin/members",
+        href: "/admin/all-members",
         visible: ["admin"],
       },
       {

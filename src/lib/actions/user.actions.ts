@@ -209,3 +209,16 @@ export const getUserWallet = async () => {
     throw new Error("Failed to fetch user wallet.");
   }
 };
+
+export async function getAllUser(page: number, limit: number) {
+  const res = await fetch(
+    `${
+      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    }/api/admin/allmember?page=${page}&limit=${limit}`,
+    {
+      next: { revalidate: 60 }, // ✅ Enable ISR for API fetch
+    }
+  );
+
+  return res.json();
+}
