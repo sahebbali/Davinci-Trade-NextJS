@@ -1,13 +1,11 @@
+import AdminDashboard from "./AdminDashboard";
+
 export default function AdminPage() {
   console.log("hello admin");
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-      <p>
-        Welcome to your dashboard! Here you can manage users, view analytics,
-        and access exclusive resources.
-      </p>
+      <AdminDashboard />
     </div>
   );
 }
