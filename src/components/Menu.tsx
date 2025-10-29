@@ -30,6 +30,8 @@ import { MdBrowserNotSupported } from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
 import { FaPersonRays } from "react-icons/fa6";
 import { MdDashboardCustomize } from "react-icons/md";
+import { FaPersonArrowDownToLine, FaHotTubPerson } from "react-icons/fa6";
+import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 
 import { useSession } from "next-auth/react";
 
@@ -44,6 +46,7 @@ const menuItems = [
   {
     title: "Profile",
     icon: <FiUserCheck size={18} />,
+    visible: ["user"],
     items: [
       {
         icon: <FiUser size={16} />,
@@ -74,6 +77,7 @@ const menuItems = [
   {
     title: "My Partner",
     icon: <FaPersonRays size={18} />,
+    visible: ["user"],
     items: [
       {
         icon: <FaPersonDotsFromLine size={16} />,
@@ -92,6 +96,7 @@ const menuItems = [
   {
     title: "TOP Up",
     icon: <FaPersonBooth size={18} />,
+    visible: ["user"],
     items: [
       {
         icon: <FaPersonDotsFromLine size={16} />,
@@ -110,6 +115,7 @@ const menuItems = [
   {
     title: "Deposit",
     icon: <FiDownload size={18} />,
+    visible: ["user"],
     items: [
       {
         icon: <FiArrowDownCircle size={16} />,
@@ -134,6 +140,7 @@ const menuItems = [
   {
     title: "Withdraw",
     icon: <FiUpload size={18} />,
+    visible: ["user"],
     items: [
       {
         icon: <FiArrowUpCircle size={16} />,
@@ -152,6 +159,7 @@ const menuItems = [
   {
     title: "Earning",
     icon: <FaBriefcase size={18} />,
+    visible: ["user"],
     items: [
       {
         icon: <MdFlipCameraAndroid size={16} />,
@@ -176,6 +184,7 @@ const menuItems = [
   {
     title: "Support",
     icon: <MdSupportAgent size={18} />,
+    visible: ["user"],
     items: [
       {
         icon: <MdOutlineContactSupport size={16} />,
@@ -197,6 +206,34 @@ const menuItems = [
       },
     ],
   },
+
+  //admin menu items can be added here
+  {
+    title: "Dashboard",
+    icon: <MdDashboardCustomize size={18} />,
+    label: "Dashboard",
+    href: "/admin",
+    visible: ["admin"],
+  },
+  {
+    title: "Members",
+    icon: <FaHotTubPerson size={18} />,
+    visible: ["admin"],
+    items: [
+      {
+        icon: <FaPersonArrowDownToLine size={16} />,
+        label: "All Active Members",
+        href: "/admin/members",
+        visible: ["admin"],
+      },
+      {
+        icon: <FaPersonArrowUpFromLine size={16} />,
+        label: "All Blocked Members",
+        href: "/admin/blocked-members",
+        visible: ["admin"],
+      },
+    ],
+  },
 ];
 
 interface MenuProps {
@@ -206,7 +243,8 @@ interface MenuProps {
 
 const Menu = ({ sidebarOpen, setSidebarOpen }: MenuProps) => {
   const { data: session } = useSession();
-  const role = session?.user?.role || "user";
+  const role = session?.user?.role;
+  console.log("User role in Menu:", role);
   const pathname = usePathname();
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -240,71 +278,85 @@ const Menu = ({ sidebarOpen, setSidebarOpen }: MenuProps) => {
         </div>
 
         {/* Scrollable Menu Items */}
+        {/* Scrollable Menu Items */}
         <div className="flex-1 overflow-y-auto p-4 text-sm">
-          {menuItems.map((section) => (
-            <div key={section.title} className="mb-2">
-              {/* If section has nested items */}
-              {section.items ? (
-                <>
-                  <button
-                    onClick={() => toggleSection(section.title)}
-                    className="w-full flex items-center justify-between px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-purple-50 transition-colors"
-                  >
-                    <span className="flex items-center gap-2">
-                      {section.icon}
-                      {section.title}
-                    </span>
-                    <FiChevronRight
-                      className={`transition-transform ${
-                        activeSection === section.title ? "rotate-90" : ""
-                      }`}
-                    />
-                  </button>
+          {menuItems
+            // 🔹 Filter sections by role (including nested items)
+            .filter((section) => {
+              // If section has no nested items
+              if (!section.items) return section.visible?.includes(role);
 
-                  {activeSection === section.title && (
-                    <div className="flex flex-col gap-1 mt-1 ml-6">
-                      {section.items.map(
-                        (item) =>
-                          item.visible.includes(role) && (
+              // If section has nested items, check if at least one is visible
+              const hasVisibleItems = section.items.some((item) =>
+                item.visible.includes(role)
+              );
+
+              // Show only if section itself or any nested item is visible
+              return section.visible?.includes(role) || hasVisibleItems;
+            })
+            .map((section) => (
+              <div key={section.title} className="mb-2">
+                {/* Nested items */}
+                {section.items ? (
+                  <>
+                    <button
+                      onClick={() => toggleSection(section.title)}
+                      className="w-full flex items-center justify-between px-2 py-2 text-gray-700 font-medium rounded-md hover:bg-purple-50 transition-colors"
+                    >
+                      <span className="flex items-center gap-2">
+                        {section.icon}
+                        {section.title}
+                      </span>
+                      <FiChevronRight
+                        className={`transition-transform ${
+                          activeSection === section.title ? "rotate-90" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {activeSection === section.title && (
+                      <div className="flex flex-col gap-1 mt-1 ml-6">
+                        {section.items
+                          .filter((item) => item.visible.includes(role))
+                          .map((item) => (
                             <Link
                               key={item.label}
                               href={item.href}
                               onClick={() => setSidebarOpen(false)}
                               className={`flex items-center gap-3 py-2 px-2 rounded-md transition-colors
-                    ${
-                      pathname === item.href
-                        ? "bg-purple-100 text-purple-600 font-medium"
-                        : "text-gray-600 hover:bg-purple-50 hover:text-purple-600"
-                    }`}
+                      ${
+                        pathname === item.href
+                          ? "bg-purple-100 text-purple-600 font-medium"
+                          : "text-gray-600 hover:bg-purple-50 hover:text-purple-600"
+                      }`}
                             >
                               {item.icon}
                               <span>{item.label}</span>
                             </Link>
-                          )
-                      )}
-                    </div>
-                  )}
-                </>
-              ) : (
-                // If section is a single link (like Dashboard)
-                section.visible.includes(role) && (
-                  <Link
-                    href={section.href}
-                    onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 py-2 px-2 rounded-md transition-colors
-          ${
-            pathname === section.href
-              ? "bg-purple-100 text-purple-600 font-medium"
-              : "text-gray-600 hover:bg-purple-50 hover:text-purple-600"
-          }`}
-                  >
-                    {section.icon}
-                    <span>{section.title}</span>
-                  </Link>
-                )
-              )}
-            </div>
-          ))}
+                          ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  // Single links
+                  section.visible.includes(role) && (
+                    <Link
+                      href={section.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 py-2 px-2 rounded-md transition-colors
+              ${
+                pathname === section.href
+                  ? "bg-purple-100 text-purple-600 font-medium"
+                  : "text-gray-600 hover:bg-purple-50 hover:text-purple-600"
+              }`}
+                    >
+                      {section.icon}
+                      <span>{section.title}</span>
+                    </Link>
+                  )
+                )}
+              </div>
+            ))}
         </div>
       </div>
     </>
