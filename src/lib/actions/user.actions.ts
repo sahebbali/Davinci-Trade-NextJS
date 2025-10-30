@@ -210,15 +210,70 @@ export const getUserWallet = async () => {
   }
 };
 
-export async function getAllUser(page: number, limit: number) {
-  const res = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-    }/api/admin/allmember?page=${page}&limit=${limit}`,
-    {
-      next: { revalidate: 60 }, // ✅ Enable ISR for API fetch
-    }
-  );
+// export async function getAllUser(page: number, limit: number) {
+//   const res = await fetch(
+//     `${
+//       process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+//     }/api/admin/allmember?page=${page}&limit=${limit}`,
+//     {
+//       next: { revalidate: 60 }, // ✅ Enable ISR for API fetch
+//     }
+//   );
+//   console.log
 
-  return res.json();
+//   return res.json();
+// }
+
+export async function getAllUser(page = 1, limit = 10, search = "") {
+  try {
+    console.log({ search });
+    console.log("Fetching users from server action...");
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
+
+    await connectToDatabase();
+
+    const skip = (page - 1) * limit;
+
+    // Build search filter
+    const searchFilter = search
+      ? {
+          $or: [
+            { fullName: { $regex: search, $options: "i" } }, // case-insensitive
+            { email: { $regex: search, $options: "i" } },
+            { userId: { $regex: search, $options: "i" } },
+            { username: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    // Combine filters: exclude admin + apply search
+    const filter = {
+      role: { $ne: "admin" },
+      ...searchFilter,
+    };
+
+    // Fetch paginated users
+    const allUser = await User.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    // Count total users matching filter
+    const total = await User.countDocuments(filter);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      success: true,
+      data: allUser,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
 }

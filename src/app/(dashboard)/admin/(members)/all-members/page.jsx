@@ -2,12 +2,11 @@
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { getUserDepositHistory } from "@/lib/actions/deposit.action";
 import ProofImageModal from "@/components/ProofImageModal";
 import { getAllUser } from "@/lib/actions/user.actions";
 
 export const metadata = {
-  title: "Deposit History | Dashboard",
+  title: "All Member | Admin Dashboard",
   description:
     "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
   keywords: [
@@ -20,21 +19,24 @@ export const metadata = {
 };
 const AllMembersPage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const search = searchParams.search ? searchParams.search : "";
+  console.log({ search });
   const limit = 10;
-  console.log({ page, limit });
+  // console.log({ page, limit });
   // ✅ Fetch deposits from server action
-  const res = await getAllUser(page, limit);
+  const res = await getAllUser(page, limit, search);
   // console.log({ res });
-  const deposits = res.success ? res.data : [];
+  const allUser = res.success ? res.data : [];
   const total = res.success ? res.total : 0;
 
+  // console.log({ allUser });
   const columns = [
     { header: "Sl", accessor: "sl" },
     { header: "User ID", accessor: "userId" },
     { header: "fullName", accessor: "fullName" },
-    { header: "Amount", accessor: "amount" },
-    { header: "Proof", accessor: "proof" },
-    { header: "Transaction ID", accessor: "transactionId" },
+    { header: "sponsorId", accessor: "sponsorId" },
+    { header: "sponsorName", accessor: "sponsorName" },
+
     { header: "Status", accessor: "status" },
   ];
 
@@ -49,24 +51,17 @@ const AllMembersPage = async ({ searchParams }) => {
       </td>
       <td className="whitespace-nowrap">{item.userId}</td>
       <td className="whitespace-nowrap">{item.fullName}</td>
-      <td className="whitespace-nowrap">${item.amount}</td>
-      <td>
-        {item.proofPic?.imageUrl && (
-          <ProofImageModal src={item.proofPic.imageUrl} alt="Proof" />
-        )}
-      </td>
-      <td className="whitespace-nowrap">{item.transactionId}</td>
+      <td className="whitespace-nowrap">${item.sponsorId}</td>
+      <td className="whitespace-nowrap">{item.sponsorName}</td>
       <td>
         <span
           className={`px-2 py-1 rounded text-xs font-semibold ${
-            item.status.toLowerCase() === "approved"
+            item.isActive
               ? "bg-green-100 text-green-600"
-              : item.status.toLowerCase() === "rejected"
-              ? "bg-red-100 text-red-600"
               : "bg-yellow-100 text-yellow-600"
           }`}
         >
-          {item.status}
+          {item.isActive ? "Active" : "Inactive"}
         </span>
       </td>
     </tr>
@@ -75,7 +70,7 @@ const AllMembersPage = async ({ searchParams }) => {
   // const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
   return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-2">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <h1 className="text-lg font-semibold">All Member ({total})</h1>
@@ -86,7 +81,7 @@ const AllMembersPage = async ({ searchParams }) => {
 
       {/* TABLE WRAPPER */}
       <div className="overflow-x-auto">
-        <Table columns={columns} renderRow={renderRow} data={deposits} />
+        <Table columns={columns} renderRow={renderRow} data={allUser} />
       </div>
 
       {/* PAGINATION */}
