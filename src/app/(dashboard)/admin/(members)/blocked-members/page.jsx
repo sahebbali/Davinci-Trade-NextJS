@@ -1,12 +1,11 @@
 // import Image from "next/image";
-import BlockButton from "@/components/BlockButton";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { getAllUser } from "@/lib/actions/user.actions";
 
 export const metadata = {
-  title: "All Member | Admin Dashboard",
+  title: "All Blocked Member | Admin Dashboard",
   description:
     "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
   keywords: [
@@ -17,9 +16,9 @@ export const metadata = {
     "crypto income",
   ],
 };
-const AllMembersPage = async ({ searchParams }) => {
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
-  const search = searchParams.search ? searchParams.search : "";
+const AllBlockedMembersPage = async ({ searchParams }) => {
+  const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
+  const search = searchParams?.search ? searchParams?.search : "";
   console.log({ search });
   const limit = 10;
   // console.log({ page, limit });
@@ -37,7 +36,6 @@ const AllMembersPage = async ({ searchParams }) => {
     { header: "sponsorId", accessor: "sponsorId" },
     { header: "sponsorName", accessor: "sponsorName" },
     { header: "Status", accessor: "status" },
-    { header: "Action", accessor: "action" },
   ];
 
   const renderRow = (item, index) => (
@@ -63,11 +61,6 @@ const AllMembersPage = async ({ searchParams }) => {
         >
           {item.isActive ? "Active" : "Inactive"}
         </span>
-      </td>
-      <td>
-        <div className="flex items-center gap-2">
-          <BlockButton userId={item.userId} isActive={item.isActive} />
-        </div>
       </td>
     </tr>
   );
@@ -97,4 +90,4 @@ const AllMembersPage = async ({ searchParams }) => {
   );
 };
 
-export default AllMembersPage;
+export default AllBlockedMembersPage;

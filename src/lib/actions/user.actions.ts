@@ -277,3 +277,24 @@ export async function getAllUser(page = 1, limit = 10, search = "") {
     return { success: false, message: error.message };
   }
 }
+
+export async function toggleBlockUser(userId = "") {
+  try {
+    await connectToDatabase();
+
+    const user = await User.findOne({ userId });
+    if (!user) throw new Error("User not found");
+
+    user.isActive = !user.isActive;
+    await user.save();
+
+    return {
+      success: true,
+      message: user.isActive
+        ? "User has been unblocked successfully"
+        : "User has been blocked successfully",
+    };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
