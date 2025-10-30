@@ -277,6 +277,60 @@ export async function getAllUser(page = 1, limit = 10, search = "") {
     return { success: false, message: error.message };
   }
 }
+export async function getAllBlockedUser(page = 1, limit = 10, search = "") {
+  try {
+    console.log({ search });
+    console.log("Fetching users from server action...");
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
+
+    await connectToDatabase();
+
+    const skip = (page - 1) * limit;
+
+    // Build search filter
+    const searchFilter = search
+      ? {
+          $or: [
+            { fullName: { $regex: search, $options: "i" } }, // case-insensitive
+            { email: { $regex: search, $options: "i" } },
+            { userId: { $regex: search, $options: "i" } },
+            { username: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    // Combine filters: exclude admin + apply search
+    const filter = {
+      role: { $ne: "admin" },
+      userStatus: false,
+      ...searchFilter,
+    };
+
+    // Fetch paginated users
+    const allUser = await User.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    // Count total users matching filter
+    const total = await User.countDocuments(filter);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      success: true,
+      data: allUser,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
 
 export async function toggleBlockUser(userId = "") {
   try {

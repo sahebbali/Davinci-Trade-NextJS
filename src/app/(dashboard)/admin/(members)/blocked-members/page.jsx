@@ -3,10 +3,10 @@ import BlockButton from "@/components/BlockButton";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { getAllUser } from "@/lib/actions/user.actions";
+import { getAllBlockedUser } from "@/lib/actions/user.actions";
 
 export const metadata = {
-  title: "All Member | Admin Dashboard",
+  title: "All Blocked Members | Admin Dashboard",
   description:
     "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
   keywords: [
@@ -24,7 +24,7 @@ const AllBlockedMembersPage = async ({ searchParams }) => {
   const limit = 10;
   // console.log({ page, limit });
   // ✅ Fetch deposits from server action
-  const res = await getAllUser(page, limit, search);
+  const res = await getAllBlockedUser(page, limit, search);
   // console.log({ res });
   const allUser = res.success ? res.data : [];
   const total = res.success ? res.total : 0;
