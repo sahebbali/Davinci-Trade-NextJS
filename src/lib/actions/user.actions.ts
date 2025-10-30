@@ -285,7 +285,7 @@ export async function toggleBlockUser(userId = "") {
     const user = await User.findOne({ userId });
     if (!user) throw new Error("User not found");
 
-    user.isActive = !user.isActive;
+    user.isActive = !user.userStatus;
     await user.save();
 
     return {

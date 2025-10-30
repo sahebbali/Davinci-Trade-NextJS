@@ -54,7 +54,7 @@ const userSchema: Schema<IUser> = new Schema(
     activationDate: { type: String, default: "N/A" },
     joiningDate: { type: String },
     rank: { type: String, default: "N/A" },
-    userStatus: { type: Boolean },
+    userStatus: { type: Boolean, default: true },
     totalDownline: { type: Number },
     team: [{ userId: String, level: String }],
     country: { type: String },
