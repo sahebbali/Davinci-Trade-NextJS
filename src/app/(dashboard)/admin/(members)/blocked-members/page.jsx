@@ -1,11 +1,12 @@
 // import Image from "next/image";
+import BlockButton from "@/components/BlockButton";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { getAllUser } from "@/lib/actions/user.actions";
 
 export const metadata = {
-  title: "All Blocked Member | Admin Dashboard",
+  title: "All Member | Admin Dashboard",
   description:
     "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
   keywords: [
@@ -17,8 +18,8 @@ export const metadata = {
   ],
 };
 const AllBlockedMembersPage = async ({ searchParams }) => {
-  const page = searchParams?.page ? parseInt(searchParams?.page) : 1;
-  const search = searchParams?.search ? searchParams?.search : "";
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const search = searchParams.search ? searchParams.search : "";
   console.log({ search });
   const limit = 10;
   // console.log({ page, limit });
@@ -36,6 +37,7 @@ const AllBlockedMembersPage = async ({ searchParams }) => {
     { header: "sponsorId", accessor: "sponsorId" },
     { header: "sponsorName", accessor: "sponsorName" },
     { header: "Status", accessor: "status" },
+    { header: "Action", accessor: "action" },
   ];
 
   const renderRow = (item, index) => (
@@ -62,6 +64,11 @@ const AllBlockedMembersPage = async ({ searchParams }) => {
           {item.isActive ? "Active" : "Inactive"}
         </span>
       </td>
+      <td>
+        <div className="flex items-center gap-2">
+          <BlockButton userId={item.userId} isActive={item.isActive} />
+        </div>
+      </td>
     </tr>
   );
 
@@ -71,7 +78,7 @@ const AllBlockedMembersPage = async ({ searchParams }) => {
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-2">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-        <h1 className="text-lg font-semibold">All Member ({total})</h1>
+        <h1 className="text-lg font-semibold">All Blocked Members ({total})</h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
         </div>
