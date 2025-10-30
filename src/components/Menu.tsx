@@ -32,6 +32,7 @@ import { FaPersonRays } from "react-icons/fa6";
 import { MdDashboardCustomize } from "react-icons/md";
 import { FaPersonArrowDownToLine, FaHotTubPerson } from "react-icons/fa6";
 import { FaPersonArrowUpFromLine } from "react-icons/fa6";
+import { RiLuggageDepositFill } from "react-icons/ri";
 
 import { useSession } from "next-auth/react";
 
@@ -230,6 +231,31 @@ const menuItems = [
         icon: <FaPersonArrowUpFromLine size={16} />,
         label: "All Blocked Members",
         href: "/admin/blocked-members",
+        visible: ["admin"],
+      },
+    ],
+  },
+  {
+    title: "Deposits",
+    icon: <RiLuggageDepositFill size={18} />,
+    visible: ["admin"],
+    items: [
+      {
+        icon: <FaPersonArrowDownToLine size={16} />,
+        label: "All Deposits",
+        href: "/admin/all-deposits",
+        visible: ["admin"],
+      },
+      {
+        icon: <FaPersonArrowUpFromLine size={16} />,
+        label: "All Successful Deposits",
+        href: "/admin/successful-deposits",
+        visible: ["admin"],
+      },
+      {
+        icon: <FaPersonArrowUpFromLine size={16} />,
+        label: "All Rejected Deposits",
+        href: "/admin/rejected-deposits",
         visible: ["admin"],
       },
     ],
