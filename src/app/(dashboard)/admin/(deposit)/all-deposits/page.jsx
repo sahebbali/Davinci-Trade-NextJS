@@ -21,10 +21,19 @@ export const metadata = {
 };
 const DepositHistoryPage = async ({ searchParams }) => {
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const search = searchParams.search ? searchParams.search : "";
+  const fromDate = searchParams.fromDate || null;
+  const toDate = searchParams.toDate || null;
   const limit = 10;
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
-  const res = await getUserDepositHistory(page, limit);
+  const res = await getUserDepositHistory(
+    page,
+    limit,
+    search,
+    fromDate,
+    toDate
+  );
   // console.log({ res });
   const deposits = res.success ? res.data : [];
   const total = res.success ? res.total : 0;
