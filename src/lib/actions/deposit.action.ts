@@ -148,7 +148,7 @@ export async function getAllDepositsHistoryAdmin(
     if (!currentUser) {
       return { success: false, message: "Unauthorized: Please login first" };
     }
-
+    console.log({ fromDate, toDate });
     await connectToDatabase();
 
     // ✅ 2. Pagination setup

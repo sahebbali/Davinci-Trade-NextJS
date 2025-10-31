@@ -3,9 +3,9 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import DateRangeFilter from "@/components/DateRangeFilter";
-import { getUserDepositHistory } from "@/lib/actions/deposit.action";
+import { getAllDepositsHistoryAdmin } from "@/lib/actions/deposit.action";
 import ProofImageModal from "@/components/ProofImageModal";
-import Image from "next/image";
+// import Image from "next/image";
 
 export const metadata = {
   title: "Deposit History | Dashboard",
@@ -20,14 +20,16 @@ export const metadata = {
   ],
 };
 const DepositHistoryPage = async ({ searchParams }) => {
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
-  const search = searchParams.search ? searchParams.search : "";
-  const fromDate = searchParams.fromDate || null;
-  const toDate = searchParams.toDate || null;
+  const params = await searchParams; // 👈 await this first!
+
+  const page = params.page ? parseInt(params.page) : 1;
+  const search = params.search || "";
+  const fromDate = params.fromDate || null;
+  const toDate = params.toDate || null;
   const limit = 10;
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
-  const res = await getUserDepositHistory(
+  const res = await getAllDepositsHistoryAdmin(
     page,
     limit,
     search,
