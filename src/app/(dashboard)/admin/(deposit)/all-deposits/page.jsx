@@ -2,6 +2,7 @@
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
+import DateRangeFilter from "@/components/DateRangeFilter";
 import { getUserDepositHistory } from "@/lib/actions/deposit.action";
 import ProofImageModal from "@/components/ProofImageModal";
 import Image from "next/image";
@@ -75,17 +76,13 @@ const DepositHistoryPage = async ({ searchParams }) => {
   // const page = searchParams.page ? parseInt(searchParams.page) : 1;
 
   return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+    <div className="bg-white p-4 rounded-md flex-1 mt-0">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <h1 className="text-lg font-semibold">Deposit History ({total})</h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
-          <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/filter.png" alt="" width={14} height={14} />
-            </button>
-          </div>
+          <DateRangeFilter />
         </div>
       </div>
 
