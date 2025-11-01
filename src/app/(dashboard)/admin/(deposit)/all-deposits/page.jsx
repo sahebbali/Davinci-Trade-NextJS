@@ -5,6 +5,7 @@ import TableSearch from "@/components/TableSearch";
 import DateRangeFilter from "@/components/DateRangeFilter";
 import { getAllDepositsHistoryAdmin } from "@/lib/actions/deposit.action";
 import ProofImageModal from "@/components/ProofImageModal";
+import DepositStatusSelect from "@/components/DepositStatusSelect";
 // import Image from "next/image";
 
 export const metadata = {
@@ -73,17 +74,11 @@ const DepositHistoryPage = async ({ searchParams }) => {
         {new Date(item.createdAt).toDateString()}
       </td>
       <td>
-        <span
-          className={`px-2 py-1 rounded text-xs font-semibold ${
-            item.status.toLowerCase() === "approved"
-              ? "bg-green-100 text-green-600"
-              : item.status.toLowerCase() === "rejected"
-              ? "bg-red-100 text-red-600"
-              : "bg-yellow-100 text-yellow-600"
-          }`}
-        >
-          {item.status}
-        </span>
+        <DepositStatusSelect
+          id={item._id}
+          currentStatus={item.status}
+          type="deposit"
+        />
       </td>
     </tr>
   );
