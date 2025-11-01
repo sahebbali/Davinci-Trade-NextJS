@@ -123,7 +123,8 @@ export async function getAllDepositsHistoryAdmin(
   limit = 10,
   search = "",
   fromDate = null,
-  toDate = null
+  toDate = null,
+  status = ""
 ) {
   try {
     // ✅ 1. Auth check
@@ -147,6 +148,9 @@ export async function getAllDepositsHistoryAdmin(
         { email: { $regex: search, $options: "i" } },
         { userId: { $regex: search, $options: "i" } },
       ];
+    }
+    if (status && status.trim()) {
+      query.status = status;
     }
 
     // 📅 Date range filter

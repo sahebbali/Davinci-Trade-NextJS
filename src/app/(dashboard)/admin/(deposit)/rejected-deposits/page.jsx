@@ -9,7 +9,7 @@ import DepositStatusSelect from "@/components/DepositStatusSelect";
 // import Image from "next/image";
 
 export const metadata = {
-  title: "Deposit History | Dashboard",
+  title: "Rejected Deposit History | Dashboard",
   description:
     "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
   keywords: [
@@ -28,7 +28,7 @@ const DepositHistoryPage = async ({ searchParams }) => {
   const fromDate = params.fromDate || null;
   const toDate = params.toDate || null;
   const limit = 10;
-  const status = "succeed";
+  const status = "rejected";
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
   const res = await getAllDepositsHistoryAdmin(
@@ -91,7 +91,9 @@ const DepositHistoryPage = async ({ searchParams }) => {
     <div className="bg-white p-4 rounded-md flex-1 mt-1">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
-        <h1 className="text-lg font-semibold">Deposit History ({total})</h1>
+        <h1 className="text-lg font-semibold">
+          Rejected Deposit History ({total})
+        </h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
           <DateRangeFilter />
