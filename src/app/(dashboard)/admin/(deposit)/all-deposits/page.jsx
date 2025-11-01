@@ -75,7 +75,7 @@ const DepositHistoryPage = async ({ searchParams }) => {
       </td>
       <td>
         <DepositStatusSelect
-          id={item._id}
+          id={item.depositId}
           currentStatus={item.status}
           type="deposit"
         />

@@ -11,9 +11,11 @@ export default function DepositStatusSelect({ id, currentStatus, type }) {
     const newStatus = e.target.value;
     setStatus(newStatus);
 
-    startTransition(async () => {
-      await updateDepositStatus(id, newStatus);
-    });
+    if (type === "deposit") {
+      startTransition(async () => {
+        await updateDepositStatus(id, newStatus);
+      });
+    }
   };
 
   return (
@@ -22,16 +24,16 @@ export default function DepositStatusSelect({ id, currentStatus, type }) {
       onChange={handleChange}
       disabled={isPending}
       className={`border rounded px-2 py-1 text-sm ${
-        status.toLowerCase() === "approved"
+        status.toLowerCase() === "succeed"
           ? "bg-green-100 text-green-600"
           : status.toLowerCase() === "rejected"
           ? "bg-red-100 text-red-600"
           : "bg-yellow-100 text-yellow-600"
       }`}
     >
-      <option value="Pending">Pending</option>
-      <option value="Approved">Approved</option>
-      <option value="Rejected">Rejected</option>
+      <option value="pending">Pending</option>
+      <option value="succeed">Approved</option>
+      <option value="rejected">Rejected</option>
     </select>
   );
 }

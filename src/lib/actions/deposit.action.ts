@@ -1,8 +1,10 @@
 "use server";
+import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../db";
 import Deposit from "../db/models/deposit.model";
 import Wallet from "../db/models/wallet.model";
 import { getCurrentUser } from "../getCurrentUser";
+import { updateMultipleWalletBalances } from "../helper";
 
 interface CreateDepositProps {
   amount: number;
@@ -85,25 +87,6 @@ export async function getUserDepositHistory(page = 1, limit = 10) {
   } catch (error) {
     console.error("❌ Error fetching deposit history:", error);
     return { success: false, error: "Failed to fetch deposit history" };
-  }
-}
-export async function updateDepositStatus(
-  depositId: string,
-  status: "pending" | "succeed" | "rejected"
-) {
-  try {
-    await connectToDatabase();
-
-    const updatedDeposit = await Deposit.findOneAndUpdate(
-      { depositId },
-      { status },
-      { new: true }
-    );
-
-    return updatedDeposit;
-  } catch (error) {
-    console.error("Error updating deposit status:", error);
-    throw new Error("Failed to update deposit");
   }
 }
 
@@ -200,5 +183,34 @@ export async function getAllDepositsHistoryAdmin(
       success: false,
       message: error.message || "Something went wrong while fetching deposits.",
     };
+  }
+}
+
+export async function updateDepositStatus(
+  depositId: string,
+  status: "pending" | "succeed" | "rejected"
+) {
+  console.log(depositId, status);
+  try {
+    const updated = await Deposit.findOneAndUpdate(
+      { depositId: depositId },
+      { status },
+      { new: true }
+    );
+
+    if (updated && status === "succeed") {
+      await updateMultipleWalletBalances(updated.userId, {
+        depositBalance: updated.amount,
+      });
+    }
+
+    revalidatePath("/admin/all-deposits"); // refresh page data
+    return {
+      success: true,
+      message: "Deposit status updated successfully",
+    };
+  } catch (error) {
+    console.error("Update deposit status error:", error);
+    return { success: false, message: "Failed to update deposit status" };
   }
 }
