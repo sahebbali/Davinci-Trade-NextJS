@@ -9,7 +9,7 @@ import DepositStatusSelect from "@/components/DepositStatusSelect";
 // import Image from "next/image";
 
 export const metadata = {
-  title: "Deposit History | Dashboard",
+  title: "Withdrawal History | Dashboard",
   description:
     "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
   keywords: [
@@ -19,9 +19,6 @@ export const metadata = {
     "user balance",
     "crypto income",
   ],
-  icons: {
-    icon: "/favicon.ico", // path inside /public folder
-  },
 };
 const DepositHistoryPage = async ({ searchParams }) => {
   const params = await searchParams; // 👈 await this first!

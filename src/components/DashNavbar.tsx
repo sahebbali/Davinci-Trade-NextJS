@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FiMenu } from "react-icons/fi"; // Hamburger menu
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { FaPersonBreastfeeding } from "react-icons/fa6";
 
 interface DashNavbarProps {
   onMenuClick?: () => void; // Function to toggle sidebar
@@ -24,7 +25,7 @@ const DashNavbar = ({ onMenuClick }: DashNavbarProps) => {
   };
   const userName = session?.user?.fullName || "Guest User";
   const userRole = session?.user?.role || "User";
-  const userAvatar = session?.user?.image || "/images/default-avatar.png"; // Use a default avatar if none from session
+  const userAvatar = session?.user?.image || "/images/man.png"; // Use a default avatar if none from session
 
   const handleLogout = async () => {
     try {
@@ -62,7 +63,7 @@ const DashNavbar = ({ onMenuClick }: DashNavbarProps) => {
     );
   }
   return (
-    <div className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-white border-b border-gray-200 shadow-sm z-50">
+    <div className="fixed top-0 left-4 right-4 flex items-center justify-between p-4 bg-white border-b border-gray-200 shadow-sm z-50">
       {/* Sidebar toggle (mobile only) */}
       <button
         className="lg:hidden p-2 text-gray-600 hover:text-blue-600 transition"
