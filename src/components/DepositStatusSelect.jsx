@@ -2,10 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { updateDepositStatus } from "@/lib/actions/deposit.action";
+import { useToast } from "./ToastProvider";
 
 export default function DepositStatusSelect({ id, currentStatus, type }) {
   const [status, setStatus] = useState(currentStatus);
   const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
 
   const handleChange = (e) => {
     const newStatus = e.target.value;
@@ -13,7 +15,8 @@ export default function DepositStatusSelect({ id, currentStatus, type }) {
 
     if (type === "deposit") {
       startTransition(async () => {
-        await updateDepositStatus(id, newStatus);
+        const res = await updateDepositStatus(id, newStatus);
+        showToast(res.message, res.success ? "success" : "error");
       });
     }
   };
@@ -22,7 +25,7 @@ export default function DepositStatusSelect({ id, currentStatus, type }) {
     <select
       value={status}
       onChange={handleChange}
-      disabled={isPending}
+      disabled={isPending || status === "succeed" || status === "rejected"}
       className={`border rounded px-2 py-1 text-sm ${
         status.toLowerCase() === "succeed"
           ? "bg-green-100 text-green-600"
