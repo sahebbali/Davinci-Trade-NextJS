@@ -163,8 +163,6 @@ export async function getAllDepositsHistoryAdmin(
         { fullName: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
         { userId: { $regex: search, $options: "i" } },
-        { username: { $regex: search, $options: "i" } },
-        { transactionId: { $regex: search, $options: "i" } },
       ];
     }
 

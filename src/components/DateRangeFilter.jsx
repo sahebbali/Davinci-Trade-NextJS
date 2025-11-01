@@ -48,7 +48,7 @@ export default function DateRangeFilter() {
       {/* Trigger Button */}
       <button
         onClick={() => setShowPicker(!showPicker)}
-        className="px-4 py-2 bg-lamaYellow rounded text-sm font-semibold"
+        className="px-4 py-2 bg-lamaYellow rounded text-sm font-semibold cursor-pointer"
       >
         {searchParams.get("fromDate") && searchParams.get("toDate")
           ? `${searchParams.get("fromDate")} → ${searchParams.get("toDate")}`
