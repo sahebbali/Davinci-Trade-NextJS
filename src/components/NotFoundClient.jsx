@@ -98,7 +98,7 @@ export default function NotFoundClient() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={() => router.push("/")}
-            className="group relative px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full font-semibold text-white overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
+            className="group relative px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full font-semibold text-white overflow-hidden transition-all cursor-pointer duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50"
           >
             <span className="relative z-10 flex items-center gap-2">
               <FaHome size={20} />
@@ -109,7 +109,7 @@ export default function NotFoundClient() {
 
           <button
             onClick={() => router.back()}
-            className="group px-8 py-4 bg-white/10 backdrop-blur-sm rounded-full font-semibold text-white border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-xl"
+            className="group px-8 py-4 bg-white/10 backdrop-blur-sm cursor-pointer rounded-full font-semibold text-white border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-xl"
           >
             <span className="flex items-center gap-2">
               <FaArrowLeft size={20} />
@@ -119,7 +119,7 @@ export default function NotFoundClient() {
 
           <button
             onClick={() => router.push("/search")}
-            className="group px-8 py-4 bg-white/10 backdrop-blur-sm rounded-full font-semibold text-white border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-xl"
+            className="group px-8 py-4 bg-white/10 cursor-pointer backdrop-blur-sm rounded-full font-semibold text-white border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-xl"
           >
             <span className="flex items-center gap-2">
               <FaSearchLocation size={20} />
