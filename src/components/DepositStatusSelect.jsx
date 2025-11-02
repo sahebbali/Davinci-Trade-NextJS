@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateDepositStatus } from "@/lib/actions/deposit.action";
 import { useToast } from "./ToastProvider";
+import { updateWithdrawStatus } from "@/lib/actions/withdraw.action";
 
 export default function DepositStatusSelect({ id, currentStatus, type }) {
   const [status, setStatus] = useState(currentStatus);
@@ -18,15 +19,14 @@ export default function DepositStatusSelect({ id, currentStatus, type }) {
         const res = await updateDepositStatus(id, newStatus);
         showToast(res.message, res.success ? "success" : "error");
       });
-    }
-    else if (type === "withdraw") {
+    } else if (type === "withdraw") {
       startTransition(async () => {
         // Assuming there's a similar function for updating withdraw status
         const res = await updateWithdrawStatus(id, newStatus);
         showToast(res.message, res.success ? "success" : "error");
       });
+    }
   };
-
   return (
     <select
       value={status}

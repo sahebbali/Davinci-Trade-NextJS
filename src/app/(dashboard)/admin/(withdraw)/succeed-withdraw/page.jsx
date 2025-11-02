@@ -27,7 +27,7 @@ const WithdrawHistoryPage = async ({ searchParams }) => {
   const fromDate = params.fromDate || null;
   const toDate = params.toDate || null;
   const limit = 10;
-  // const status = "succeed";
+  const status = "succeed";
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
   const res = await getAllWithdrawHistoryAdmin(
@@ -35,8 +35,8 @@ const WithdrawHistoryPage = async ({ searchParams }) => {
     limit,
     search,
     fromDate,
-    toDate
-    // status
+    toDate,
+    status
   );
   // console.log({ res });
   const data = res.success ? res.data : [];
