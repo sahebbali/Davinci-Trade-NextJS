@@ -33,6 +33,12 @@ import { MdDashboardCustomize } from "react-icons/md";
 import { FaPersonArrowDownToLine, FaHotTubPerson } from "react-icons/fa6";
 import { FaPersonArrowUpFromLine } from "react-icons/fa6";
 import { RiLuggageDepositFill } from "react-icons/ri";
+import { FaCashRegister } from "react-icons/fa";
+import { BsCashCoin } from "react-icons/bs";
+import { TbCash } from "react-icons/tb";
+import { TbCashOff } from "react-icons/tb";
+import { RiLuggageDepositLine } from "react-icons/ri";
+import { FaDiagramSuccessor } from "react-icons/fa6";
 
 import { useSession } from "next-auth/react";
 
@@ -241,13 +247,13 @@ const menuItems = [
     visible: ["admin"],
     items: [
       {
-        icon: <FaPersonArrowDownToLine size={16} />,
+        icon: <RiLuggageDepositLine size={16} />,
         label: "All Deposits",
         href: "/admin/all-deposits",
         visible: ["admin"],
       },
       {
-        icon: <FaPersonArrowUpFromLine size={16} />,
+        icon: <FaDiagramSuccessor size={16} />,
         label: "All Successful Deposits",
         href: "/admin/successful-deposits",
         visible: ["admin"],
@@ -256,6 +262,31 @@ const menuItems = [
         icon: <FaPersonArrowUpFromLine size={16} />,
         label: "All Rejected Deposits",
         href: "/admin/rejected-deposits",
+        visible: ["admin"],
+      },
+    ],
+  },
+  {
+    title: "Withdraws",
+    icon: <FaCashRegister size={18} />,
+    visible: ["admin"],
+    items: [
+      {
+        icon: <BsCashCoin size={16} />,
+        label: "All Withdraws",
+        href: "/admin/all-withdraw",
+        visible: ["admin"],
+      },
+      {
+        icon: <TbCash size={16} />,
+        label: "All Succeed Withdraws",
+        href: "/admin/succeed-withdraw",
+        visible: ["admin"],
+      },
+      {
+        icon: <TbCashOff size={16} />,
+        label: "All Rejected Withdraws",
+        href: "/admin/rejected-withdraw",
         visible: ["admin"],
       },
     ],

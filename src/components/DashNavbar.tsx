@@ -18,11 +18,7 @@ const DashNavbar = ({ onMenuClick }: DashNavbarProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Mock user data
-  const user = {
-    name: "John Doe",
-    role: "Admin",
-    avatar: "/images/avatar-1.jpg", // Replace with real avatar
-  };
+
   const userName = session?.user?.fullName || "Guest User";
   const userRole = session?.user?.role || "User";
   const userAvatar = session?.user?.image || "/images/man.png"; // Use a default avatar if none from session
