@@ -19,6 +19,12 @@ export default function DepositStatusSelect({ id, currentStatus, type }) {
         showToast(res.message, res.success ? "success" : "error");
       });
     }
+    else if (type === "withdraw") {
+      startTransition(async () => {
+        // Assuming there's a similar function for updating withdraw status
+        const res = await updateWithdrawStatus(id, newStatus);
+        showToast(res.message, res.success ? "success" : "error");
+      });
   };
 
   return (

@@ -3,9 +3,9 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import DateRangeFilter from "@/components/DateRangeFilter";
-import { getAllDepositsHistoryAdmin } from "@/lib/actions/deposit.action";
 import ProofImageModal from "@/components/ProofImageModal";
 import DepositStatusSelect from "@/components/DepositStatusSelect";
+import { getAllWithdrawHistoryAdmin } from "@/lib/actions/withdraw.action";
 // import Image from "next/image";
 
 export const metadata = {
@@ -20,7 +20,7 @@ export const metadata = {
     "crypto income",
   ],
 };
-const DepositHistoryPage = async ({ searchParams }) => {
+const WithdrawHistoryPage = async ({ searchParams }) => {
   const params = await searchParams; // 👈 await this first!
 
   const page = params.page ? parseInt(params.page) : 1;
@@ -31,7 +31,7 @@ const DepositHistoryPage = async ({ searchParams }) => {
   // const status = "succeed";
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
-  const res = await getAllDepositsHistoryAdmin(
+  const res = await getAllWithdrawHistoryAdmin(
     page,
     limit,
     search,
@@ -40,16 +40,15 @@ const DepositHistoryPage = async ({ searchParams }) => {
     // status
   );
   // console.log({ res });
-  const deposits = res.success ? res.data : [];
+  const data = res.success ? res.data : [];
+  console.log({ data });
   const total = res.success ? res.total : 0;
 
   const columns = [
     { header: "Sl", accessor: "sl" },
     { header: "User ID", accessor: "userId" },
     { header: "fullName", accessor: "fullName" },
-    { header: "Amount", accessor: "amount" },
-    { header: "Proof", accessor: "proof" },
-    { header: "Transaction ID", accessor: "transactionId" },
+    { header: "Amount", accessor: "requestAmount:" },
     { header: "Date", accessor: "date" },
     { header: "Status", accessor: "status" },
   ];
@@ -65,21 +64,16 @@ const DepositHistoryPage = async ({ searchParams }) => {
       </td>
       <td className="whitespace-nowrap">{item.userId}</td>
       <td className="whitespace-nowrap">{item.fullName}</td>
-      <td className="whitespace-nowrap">${item.amount}</td>
-      <td>
-        {item.proofPic?.imageUrl && (
-          <ProofImageModal src={item.proofPic.imageUrl} alt="Proof" />
-        )}
-      </td>
-      <td className="whitespace-nowrap">{item.transactionId}</td>
+      <td className="whitespace-nowrap">${item.requestAmount}</td>
+
       <td className="whitespace-nowrap">
         {new Date(item.createdAt).toDateString()}
       </td>
       <td>
         <DepositStatusSelect
-          id={item.depositId}
+          id={item._id}
           currentStatus={item.status}
-          type="deposit"
+          type="withdraw"
         />
       </td>
     </tr>
@@ -91,7 +85,9 @@ const DepositHistoryPage = async ({ searchParams }) => {
     <div className="bg-white p-4 rounded-md flex-1 mt-1">
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
-        <h1 className="text-lg font-semibold">Deposit History ({total})</h1>
+        <h1 className="text-lg font-semibold">
+          All Withdraw History ({total})
+        </h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
           <DateRangeFilter />
@@ -100,7 +96,7 @@ const DepositHistoryPage = async ({ searchParams }) => {
 
       {/* TABLE WRAPPER */}
       <div className="overflow-x-auto">
-        <Table columns={columns} renderRow={renderRow} data={deposits} />
+        <Table columns={columns} renderRow={renderRow} data={data} />
       </div>
 
       {/* PAGINATION */}
@@ -111,4 +107,4 @@ const DepositHistoryPage = async ({ searchParams }) => {
   );
 };
 
-export default DepositHistoryPage;
+export default WithdrawHistoryPage;
