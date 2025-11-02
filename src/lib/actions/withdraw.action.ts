@@ -1,9 +1,11 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "../db";
 import Withdraw, { IWithdraw, WithdrawType } from "../db/models/withdraw.model";
 
 import { getCurrentUser } from "../getCurrentUser";
+import { updateMultipleWalletBalances } from "../helper";
 
 interface CreateWithdrawProps {
   amount: number;
@@ -119,5 +121,34 @@ export async function getAllWithdrawHistoryAdmin(
       success: false,
       message: error.message || "Something went wrong while fetching Withdraw.",
     };
+  }
+}
+
+export async function updateWithdrawStatus(
+  id: string,
+  status: "pending" | "succeed" | "rejected"
+) {
+  console.log(id, status);
+  try {
+    const updated = await Withdraw.findOneAndUpdate(
+      { _id: id },
+      { status },
+      { new: true }
+    );
+
+    if (updated && status === "rejected") {
+      await updateMultipleWalletBalances(updated.userId, {
+        activeIncome: updated.requestAmount,
+      });
+    }
+
+    revalidatePath("/admin/all-withdraw"); // refresh page data
+    return {
+      success: true,
+      message: "Withdraw status updated successfully",
+    };
+  } catch (error) {
+    console.error("Update withdraw status error:", error);
+    return { success: false, message: "Failed to update withdraw status" };
   }
 }
