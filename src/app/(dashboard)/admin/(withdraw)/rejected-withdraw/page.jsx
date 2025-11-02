@@ -27,7 +27,7 @@ const WithdrawHistoryPage = async ({ searchParams }) => {
   const fromDate = params.fromDate || null;
   const toDate = params.toDate || null;
   const limit = 10;
-  const status = "succeed";
+  const status = "rejected";
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
   const res = await getAllWithdrawHistoryAdmin(
@@ -85,7 +85,7 @@ const WithdrawHistoryPage = async ({ searchParams }) => {
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
         <h1 className="text-lg font-semibold">
-          All Succeed Withdraw History ({total})
+          All Rejected Withdraw History ({total})
         </h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
