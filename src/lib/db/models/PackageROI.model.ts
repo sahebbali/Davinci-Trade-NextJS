@@ -1,11 +1,11 @@
 import mongoose, { Schema, model, models, Document } from "mongoose";
 
-
 // TypeScript Interface
 export interface IPackageRoi extends Document {
   userId: string;
   fullName: string;
   package: number;
+  amount: number;
   commissionPercentage: number;
   commissionAmount: number;
   incomeDay: number;
@@ -23,6 +23,7 @@ const packageRoiSchema = new Schema<IPackageRoi>(
     userId: { type: String, required: true },
     fullName: { type: String, required: true },
     package: { type: Number, required: true },
+    amount: { type: Number, required: true },
     commissionPercentage: { type: Number, required: true },
     commissionAmount: { type: Number, required: true },
     incomeDay: { type: Number, required: true },
@@ -33,8 +34,6 @@ const packageRoiSchema = new Schema<IPackageRoi>(
   },
   { timestamps: true }
 );
-
-
 
 // Model
 export const PackageRoi =

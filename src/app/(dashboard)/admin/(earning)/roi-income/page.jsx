@@ -3,8 +3,7 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import DateRangeFilter from "@/components/DateRangeFilter";
-import DepositStatusSelect from "@/components/DepositStatusSelect";
-import { getAllWithdrawHistoryAdmin } from "@/lib/actions/withdraw.action";
+import { getAllROIIncomeAdmin } from "@/lib/actions/Earning.action";
 // import Image from "next/image";
 
 export const metadata = {
@@ -27,29 +26,24 @@ const WithdrawHistoryPage = async ({ searchParams }) => {
   const fromDate = params.fromDate || null;
   const toDate = params.toDate || null;
   const limit = 10;
-  const status = "succeed";
+
   console.log({ page, limit });
   // ✅ Fetch deposits from server action
-  const res = await getAllWithdrawHistoryAdmin(
-    page,
-    limit,
-    search,
-    fromDate,
-    toDate,
-    status
-  );
+  const res = await getAllROIIncomeAdmin(page, limit, search, fromDate, toDate);
   // console.log({ res });
   const data = res.success ? res.data : [];
-  console.log({ data });
+  // console.log({ data });
   const total = res.success ? res.total : 0;
 
   const columns = [
     { header: "Sl", accessor: "sl" },
     { header: "User ID", accessor: "userId" },
     { header: "fullName", accessor: "fullName" },
-    { header: "Amount", accessor: "requestAmount:" },
-    { header: "Date", accessor: "date" },
-    { header: "Status", accessor: "status" },
+    { header: "Package", accessor: "package" },
+    { header: "Percentage", accessor: "commissionPercentage" },
+    { header: "Amount", accessor: "commissionAmount" },
+    { header: "Income Day", accessor: "incomeDay" },
+    { header: "Date", accessor: "incomeDate" },
   ];
 
   const renderRow = (item, index) => (
@@ -63,18 +57,11 @@ const WithdrawHistoryPage = async ({ searchParams }) => {
       </td>
       <td className="whitespace-nowrap">{item.userId}</td>
       <td className="whitespace-nowrap">{item.fullName}</td>
-      <td className="whitespace-nowrap">${item.requestAmount}</td>
-
-      <td className="whitespace-nowrap">
-        {new Date(item.createdAt).toDateString()}
-      </td>
-      <td>
-        <DepositStatusSelect
-          id={item._id}
-          currentStatus={item.status}
-          type="withdraw"
-        />
-      </td>
+      <td className="whitespace-nowrap">${item.package}</td>
+      <td className="whitespace-nowrap">{item.commissionPercentage} %</td>
+      <td className="whitespace-nowrap">${item.commissionAmount}</td>
+      <td className="whitespace-nowrap">{item.incomeDay}</td>
+      <td className="whitespace-nowrap">{item.incomeDate}</td>
     </tr>
   );
 
