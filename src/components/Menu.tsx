@@ -17,28 +17,35 @@ import {
   FiUpload,
   FiX,
 } from "react-icons/fi";
-import { FaBriefcase } from "react-icons/fa";
-import { MdFlipCameraAndroid } from "react-icons/md";
 import { SiLevelsdotfyi } from "react-icons/si";
 import { GiProfit } from "react-icons/gi";
-import { FaPersonBooth } from "react-icons/fa";
-import { FaPersonDotsFromLine } from "react-icons/fa6";
-import { FaUsers } from "react-icons/fa";
-import { MdSupportAgent } from "react-icons/md";
-import { MdOutlineContactSupport } from "react-icons/md";
-import { MdBrowserNotSupported } from "react-icons/md";
+import { FaPersonDotsFromLine, FaPersonArrowUpFromLine } from "react-icons/fa6";
+import {
+  FaUsers,
+  FaPersonBooth,
+  FaCashRegister,
+  FaBriefcase,
+} from "react-icons/fa";
+import {
+  MdOutlineContactSupport,
+  MdBrowserNotSupported,
+  MdOutlineCleanHands,
+  MdSupportAgent,
+  MdDashboardCustomize,
+  MdFlipCameraAndroid,
+} from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
-import { FaPersonRays } from "react-icons/fa6";
-import { MdDashboardCustomize } from "react-icons/md";
-import { FaPersonArrowDownToLine, FaHotTubPerson } from "react-icons/fa6";
-import { FaPersonArrowUpFromLine } from "react-icons/fa6";
-import { RiLuggageDepositFill } from "react-icons/ri";
-import { FaCashRegister } from "react-icons/fa";
+import {
+  FaPersonArrowDownToLine,
+  FaHotTubPerson,
+  FaPersonRays,
+} from "react-icons/fa6";
+import { RiLuggageDepositFill, RiLuggageDepositLine } from "react-icons/ri";
 import { BsCashCoin } from "react-icons/bs";
-import { TbCash } from "react-icons/tb";
-import { TbCashOff } from "react-icons/tb";
-import { RiLuggageDepositLine } from "react-icons/ri";
+import { TbCash, TbCashOff } from "react-icons/tb";
 import { FaDiagramSuccessor } from "react-icons/fa6";
+import { GiCroissantsPupil } from "react-icons/gi";
+import { SiOpslevel } from "react-icons/si";
 
 import { useSession } from "next-auth/react";
 
@@ -287,6 +294,31 @@ const menuItems = [
         icon: <TbCashOff size={16} />,
         label: "All Rejected Withdraws",
         href: "/admin/rejected-withdraw",
+        visible: ["admin"],
+      },
+    ],
+  },
+  {
+    title: "Earning",
+    icon: <MdOutlineCleanHands size={18} />,
+    visible: ["admin"],
+    items: [
+      {
+        icon: <GiCroissantsPupil size={16} />,
+        label: "ROI Income",
+        href: "/admin/roi-income",
+        visible: ["admin"],
+      },
+      {
+        icon: <SiOpslevel size={16} />,
+        label: "Level Income",
+        href: "/admin/level-income",
+        visible: ["admin"],
+      },
+      {
+        icon: <GiProfit size={16} />,
+        label: "Profit Sharing Income",
+        href: "/admin/profit-sharing-income",
         visible: ["admin"],
       },
     ],

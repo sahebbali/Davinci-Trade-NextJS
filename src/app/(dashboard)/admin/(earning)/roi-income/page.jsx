@@ -8,7 +8,7 @@ import { getAllWithdrawHistoryAdmin } from "@/lib/actions/withdraw.action";
 // import Image from "next/image";
 
 export const metadata = {
-  title: "Withdrawal History | Dashboard",
+  title: "Roi Income History | Dashboard",
   description:
     "View your wallet balances, track income, investments, and manage all your financial activities in one place.",
   keywords: [
@@ -85,7 +85,7 @@ const WithdrawHistoryPage = async ({ searchParams }) => {
       {/* TOP BAR */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
         <h1 className="text-lg font-semibold">
-          All Succeed Withdraw History ({total})
+          All ROI Income History ({total})
         </h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <TableSearch />
