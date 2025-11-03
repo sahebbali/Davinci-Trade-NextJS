@@ -46,6 +46,9 @@ import { TbCash, TbCashOff } from "react-icons/tb";
 import { FaDiagramSuccessor } from "react-icons/fa6";
 import { GiCroissantsPupil } from "react-icons/gi";
 import { SiOpslevel } from "react-icons/si";
+import { IoSettingsOutline } from "react-icons/io5";
+import { MdManageHistory } from "react-icons/md";
+import { MdOutlinePassword } from "react-icons/md";
 
 import { useSession } from "next-auth/react";
 
@@ -319,6 +322,25 @@ const menuItems = [
         icon: <GiProfit size={16} />,
         label: "Profit Sharing Income",
         href: "/admin/profit-sharing-income",
+        visible: ["admin"],
+      },
+    ],
+  },
+  {
+    title: "Settings",
+    icon: <IoSettingsOutline size={18} />,
+    visible: ["admin"],
+    items: [
+      {
+        icon: <MdManageHistory size={16} />,
+        label: "Manage ROI ",
+        href: "/admin/manage-roi",
+        visible: ["admin"],
+      },
+      {
+        icon: <MdOutlinePassword size={16} />,
+        label: "Change Password",
+        href: "/admin/change-password",
         visible: ["admin"],
       },
     ],
